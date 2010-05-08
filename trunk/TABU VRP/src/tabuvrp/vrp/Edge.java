@@ -1,14 +1,30 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package tabuvrp.vrp;
 
-/**
- *
- * @author lmolr
- */
-public class Edge {
+
+public final class Edge {
+
+
+	private final int cost;
+
+
+	public Edge(int cost) {
+		this.cost = cost;
+	}
+
+
+	public Edge(String s) {
+		this.cost = Integer.parseInt(s);
+	}
+
+
+	public final int getCost() {
+		return cost;
+	}
+
+
+	@Override
+	public String toString() {
+		return "Cost: " + cost;
+	}
 
 }
