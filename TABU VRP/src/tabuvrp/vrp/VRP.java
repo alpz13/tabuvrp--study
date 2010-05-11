@@ -1,46 +1,80 @@
 package tabuvrp.vrp;
 
+import java.util.Arrays;
+import java.util.Comparator;
+
 
 public class VRP implements Problem {
 
+    class Util implements Comparator<Integer> {
 
-	protected Node[] nodes;
+        final Edge[][] edges;
+        final int i;
 
-	protected Edge[][] edges;
+        Util(Edge[][] edges, int i) {
+            this.edges = edges;
+            this.i = i;
+        }
 
-	protected final int nodeCount;
-
-
-	public VRP(int n) {
-		nodes = new Node[n];
-		edges = new Edge[n][n];
-		nodeCount = n;
-	}
-
-
-	public int getNodeCount() {
-		return nodeCount;
-	}
+        public int compare(Integer j1, Integer j2) {
+            return Integer.valueOf(edges[i][j1].getCost()).compareTo(edges[i][j2].getCost());
+        }
+    }
 
 
-	public Node getNode(int n) {
-		return nodes[n];
-	}
+    protected Node[] nodes;
+
+    protected Edge[][] edges;
+
+    protected int[][] neighbourhood;
+
+    protected final int nodeCount;
 
 
-	public Edge getEdge(int i, int j) {
-		return edges[i][j];
-	}
+    public VRP(Node[] nodes, Edge[][] edges, int n) {
+
+        this.nodes = Arrays.copyOf(nodes, n);
+        this.edges = new Edge[n][n];
+        neighbourhood = new int[n][n];
+        Integer[] tmp = new Integer[n];
+
+        for (int i = 0; i < n; ++i) {
+
+            Comparator<Integer> comp = new Util(edges, i);
+
+            for (int j = 0; j < n; ++j) {
+                this.edges[i][j] = edges[i][j];
+                tmp[j] = j;
+            }
+
+            Arrays.sort(tmp, comp);
+
+            for (int j = 0; j < n; ++j) {
+                neighbourhood[i][j] = tmp[j];
+            }
+
+        }
+
+        nodeCount = n;
+    }
 
 
-	public void setNode(int n, Node node) {
-		nodes[n] = node;
-	}
+    public int getNodeCount() {
+        return nodeCount;
+    }
 
 
-	public void setEdge(int i, int j, Edge edge) {
-		edges[i][j] = edge;
-	}
+    public Node getNode(int n) {
+        return nodes[n];
+    }
 
 
+    public Edge getEdge(int i, int j) {
+        return edges[i][j];
+    }
+
+    
+    public int[] getNeighbourhood(int n, int count) {
+        return Arrays.copyOf(neighbourhood[n], count);
+    }
 }
