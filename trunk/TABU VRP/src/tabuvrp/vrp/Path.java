@@ -1,26 +1,25 @@
 package tabuvrp.vrp;
 
-import tabuvrp.graph.I_GraphView;
 import java.util.ArrayList;
 
 
 public class Path {
 
 
-	protected final I_GraphView<Node, Edge> graph;
+	protected final Problem graph;
 
 	protected final ArrayList<Integer> steps;
 
 	protected int cost;
 
-        protected int overDemand;
+        protected int demandBalance;
         
 
-	public Path(I_GraphView <Node, Edge> graph) {
+	public Path(Problem graph) {
 		this.graph = graph;
 		steps = new ArrayList<Integer>();
 		cost = 0;
-                overDemand = graph.getNode(0).getDemand();
+                demandBalance = graph.getNode(0).getDemand();
 	}
 
 
@@ -32,7 +31,7 @@ public class Path {
 	public void insert(int index, Integer n) {
 		steps.add(index, n);
 		cost += deltaForInsert(index, n);
-                overDemand += graph.getNode(n).getDemand();
+                demandBalance += graph.getNode(n).getDemand();
 	}
 
 
@@ -54,12 +53,12 @@ public class Path {
 	public void append(Integer n) {
 		steps.add(n);
 		cost += deltaForInsert(steps.size(), n);
-                overDemand += graph.getNode(n).getDemand();
+                demandBalance += graph.getNode(n).getDemand();
 	}
 
 
 	public void remove(int index) {
-                overDemand -= graph.getNode(steps.get(index)).getDemand();
+                demandBalance -= graph.getNode(steps.get(index)).getDemand();
 		steps.remove(index);
 		cost += deltaForRemove(index);
 	}
@@ -83,8 +82,13 @@ public class Path {
         }
 
 
+        public int getDemandBalance() {
+            return demandBalance;
+        }
+
+        
         public boolean isFeasible() {
-            return overDemand <= 0;
+            return demandBalance <= 0;
         }
         
 }

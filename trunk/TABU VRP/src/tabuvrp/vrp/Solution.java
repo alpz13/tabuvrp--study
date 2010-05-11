@@ -1,19 +1,15 @@
 package tabuvrp.vrp;
 
 import java.util.ArrayList;
-import tabuvrp.graph.*;
 
 
 public class Solution {
 
 
-    protected final I_GraphView<Node, Edge> graph;
-
     protected final ArrayList<Path> paths;
 
 
-    public Solution(I_GraphView<Node, Edge> graph) {
-        this.graph = graph;
+    public Solution() {
         this.paths = new ArrayList<Path>();
     }
 
@@ -27,6 +23,17 @@ public class Solution {
     }
 
 
+    public double getOverDemand() {
+        double total = 0;
+        for (Path p : paths) {
+            if (!p.isFeasible()) {
+                total += p.getDemandBalance();
+            }
+        }
+        return total;
+    }
+
+
     public boolean isFeasible() {
         for (Path p : paths) {
             if (!p.isFeasible()) {
@@ -34,6 +41,11 @@ public class Solution {
             }
         }
         return true;
+    }
+
+
+    public ArrayList<Path> getPaths() {
+        return paths;
     }
 
 
