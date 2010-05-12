@@ -96,4 +96,14 @@ public class Path {
         // TODO: need faster lookup.
         return steps.indexOf(nodeIndex);
     }
+
+    @Override
+    public String toString() {
+        // TODO: use builder.
+        String s = "Path: ";
+        for (Integer i : steps) {
+            s += i + " ";
+        }
+        return s;
+    }
 }
