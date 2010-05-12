@@ -15,5 +15,8 @@ public interface TabuStagePolicy {
 
     public int getQ();
 
+
+    public int getTheta();
+
     
 }

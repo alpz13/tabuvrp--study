@@ -1,32 +1,24 @@
 package tabuvrp.vrp;
 
-
 public final class Node {
 
+    private final int demand;
 
-	private final int demand;
+    public Node(int demand) {
+        this.demand = demand;
+    }
 
+    public Node(String s) {
+        this.demand = Integer.parseInt(s);
+    }
 
-	public Node(int demand) {
-		this.demand = demand;
-	}
+    public final int getDemand() {
+        return demand;
+    }
 
-
-	public Node(String s) {
-		this.demand = Integer.parseInt(s);
-	}
-
-
-	public final int getDemand() {
-		return demand;
-	}
-
-
-	@Override
-	public String toString() {
-		return "Demand: " + demand;
-	}
-
-
+    @Override
+    public String toString() {
+        return "Demand: " + demand;
+    }
 }
 

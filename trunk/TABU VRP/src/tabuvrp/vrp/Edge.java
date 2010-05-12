@@ -1,30 +1,23 @@
 package tabuvrp.vrp;
 
-
 public final class Edge {
 
+    private final int cost;
 
-	private final int cost;
+    public Edge(int cost) {
+        this.cost = cost;
+    }
 
+    public Edge(String s) {
+        this.cost = Integer.parseInt(s);
+    }
 
-	public Edge(int cost) {
-		this.cost = cost;
-	}
+    public final int getCost() {
+        return cost;
+    }
 
-
-	public Edge(String s) {
-		this.cost = Integer.parseInt(s);
-	}
-
-
-	public final int getCost() {
-		return cost;
-	}
-
-
-	@Override
-	public String toString() {
-		return "Cost: " + cost;
-	}
-
+    @Override
+    public String toString() {
+        return "Cost: " + cost;
+    }
 }

@@ -6,6 +6,7 @@ import java.util.Comparator;
 
 public class VRP implements Problem {
 
+
     class Util implements Comparator<Integer> {
 
         final Edge[][] edges;
@@ -31,26 +32,36 @@ public class VRP implements Problem {
     protected final int nodeCount;
 
 
-    public VRP(Node[] nodes, Edge[][] edges, int n) {
+    public VRP(Integer[] nodeValues, Integer[][] edgeValues, int n) {
 
-        this.nodes = Arrays.copyOf(nodes, n);
+        this.nodes = new Node[n];
+
         this.edges = new Edge[n][n];
         neighbourhood = new int[n][n];
         Integer[] tmp = new Integer[n];
 
         for (int i = 0; i < n; ++i) {
 
+            nodes[i] = new Node(nodeValues[i]);
+
             Comparator<Integer> comp = new Util(edges, i);
 
-            for (int j = 0; j < n; ++j) {
-                this.edges[i][j] = edges[i][j];
+            int j;
+            for (j = 0; j < n; ++j) {
+                this.edges[i][j] = new Edge(edgeValues[i][j]);
                 tmp[j] = j;
             }
 
             Arrays.sort(tmp, comp);
 
-            for (int j = 0; j < n; ++j) {
-                neighbourhood[i][j] = tmp[j];
+            j = 0;
+            int k = 0;
+            while(j < n) {
+                if ((tmp[j] != i) && (tmp[j] != 0)) {
+                    neighbourhood[i][k] = tmp[j];
+                    k += 1;
+                }
+                j += 1;
             }
 
         }
