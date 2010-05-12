@@ -1,8 +1,5 @@
 package tabuvrp.vrp;
 
-import java.util.HashMap;
-
-
 public class TabuIndex {
 
     protected int[][] left;
@@ -24,7 +21,7 @@ public class TabuIndex {
     }
 
     public void setTabu(int i, int j) {
-        left[i][j] += theta;
+        left[i][j] = theta;
     }
 
     public boolean isTabu(int i, int j) {
