@@ -9,16 +9,14 @@ public class Solution {
     protected final ArrayList<Path> paths;
     protected final HashMap<Integer, Path> nodesToPaths;
     protected int cost;
-    protected int demandBalance;
-    protected int overDemand;
+    protected int infIndex;
 
     public Solution(Problem problem) {
         this.problem = problem;
         paths = new ArrayList<Path>(problem.getNodeCount());
         nodesToPaths = new HashMap<Integer, Path>();
         cost = 0;
-        demandBalance = 0;
-        overDemand = 0;
+        infIndex = 0;
     }
 
     public int getPathSizeByNodeIndex(Integer nodeIndex) {
@@ -30,7 +28,7 @@ public class Solution {
     }
 
     public boolean isFeasible() {
-        return demandBalance <= 0;
+        return infIndex <= 0;
     }
 
     public void addPath(Integer nodeIndex) {
@@ -38,8 +36,7 @@ public class Solution {
         p.insert(0, nodeIndex);
         nodesToPaths.put(nodeIndex, p);
         cost += p.getCost();
-        demandBalance += p.getDemandBalance();
-        overDemand += (p.getDemandBalance() > 0)? p.getDemandBalance() : 0;
+        infIndex += p.getDemandBalance();
         paths.add(p);
     }
 
@@ -48,9 +45,9 @@ public class Solution {
                      int position) {
         Path sourcePath = nodesToPaths.get(sourceNode);
         Path targetPath = nodesToPaths.get(targetNode);
+
         cost += deltaCostForMove(sourceNode, targetNode, position);
-        demandBalance += deltaDemandBalanceForMove(sourceNode, targetNode, position);
-        overDemand += deltaOverDemandForMove(sourceNode, targetNode, position);
+        infIndex += deltaInfIndexForMove(sourceNode, targetNode, position);
 
         /* remove source node from source path */
         sourcePath.remove(sourcePath.getPositionByNodeIndex(sourceNode));
@@ -73,7 +70,7 @@ public class Solution {
                + targetPath.deltaCostForInsert(position, sourceNode);
     }
 
-    public int deltaDemandBalanceForMove(Integer sourceNode, 
+    public int deltaInfIndexForMove(Integer sourceNode,
                                          Integer targetNode,
                                          int position) {
         Path sourcePath = nodesToPaths.get(sourceNode);
@@ -82,28 +79,14 @@ public class Solution {
                 + targetPath.deltaDemandBalanceForInsert(sourceNode);
     }
 
-    public int deltaOverDemandForMove(Integer sourceNode,
-                                      Integer targetNode,
-                                      int position) {
-        Path sourcePath = nodesToPaths.get(sourceNode);
-        Path targetPath = nodesToPaths.get(targetNode);
-        int dOD1 = sourcePath.deltaDemandBalanceForRemove(sourcePath.getPositionByNodeIndex(sourceNode));
-        int dOD2 = targetPath.deltaDemandBalanceForInsert(sourceNode);
-        return   ((dOD1 > 0)? dOD1 : 0)
-               + ((dOD2 > 0)? dOD2 : 0);
-    }
-
     public int getCost() {
         return cost;
     }
 
-    public int getDemandBalance() {
-        return demandBalance;
+    public int getInfIndex() {
+        return infIndex;
     }
 
-    public int getOverDemand() {
-        return overDemand;
-    }
 
     @Override
     public String toString() {
@@ -113,8 +96,8 @@ public class Solution {
             s += "\t" + p + "\n";
         }
         s += isFeasible()? "  Feasible" : "  Not feasible";
-        s += "\n  Cost:" + getCost();
-        s += "\n  Demand balance:" + getDemandBalance() + "\n";
+        s += "\n  Cost:" + cost;
+        s += "\n  Infeasibility index:" + infIndex + "\n";
         return s;
     }
 }

@@ -9,12 +9,14 @@ public class Path {
     protected final ArrayList<Integer> steps;
     protected int cost;
     protected int demandBalance;
+    protected int overDemand;
 
     public Path(Problem graph) {
         this.graph = graph;
         steps = new ArrayList<Integer>();
         cost = 0;
         demandBalance = graph.getNode(0).getDemand();
+        overDemand = 0;
     }
 
     public boolean isEmpty() {
@@ -23,14 +25,16 @@ public class Path {
 
     public void insert(int position, Integer nodeIndex) {
         cost += deltaCostForInsert(position, nodeIndex);
+        demandBalance += deltaDemandBalanceForInsert(nodeIndex);
+        overDemand += deltaOverDemandForInsert(nodeIndex);
         steps.add(position, nodeIndex);
-        demandBalance += graph.getNode(nodeIndex).getDemand();
     }
 
     public void remove(int position) {
-        demandBalance -= graph.getNode(steps.get(position)).getDemand();
-        steps.remove(position);
         cost += deltaCostForRemove(position);
+        demandBalance += deltaDemandBalanceForRemove(position);
+        overDemand += deltaOverDemandForRemove(position);
+        steps.remove(position);
     }
 
     public int deltaCostForInsert(int position, Integer nodeIndex) {
@@ -47,13 +51,12 @@ public class Path {
     }
 
     public int deltaDemandBalanceForInsert(Integer nodeIndex) {
-        return demandBalance + graph.getNode(nodeIndex).getDemand();
+        return graph.getNode(nodeIndex).getDemand();
     }
 
     public int deltaOverDemandForInsert(Integer nodeIndex) {
         int newDem = graph.getNode(nodeIndex).getDemand();
-        return   ((demandBalance > 0)? demandBalance : 0)
-               + ((newDem > 0)? newDem : 0);
+        return  (newDem > 0)? newDem : 0;
     }
 
     public int deltaCostForRemove(int position) {
@@ -69,7 +72,13 @@ public class Path {
     }
 
     public int deltaDemandBalanceForRemove(int position) {
-        return demandBalance - steps.get(position);
+        Node node = graph.getNode(steps.get(position));
+        return node.getDemand();
+    }
+
+    public int deltaOverDemandForRemove(int position) {
+        int nodeDemand = graph.getNode(steps.get(position)).getDemand();
+        return (overDemand - nodeDemand < 0)? (- overDemand) : (- nodeDemand);
     }
 
     public int getCost() {
@@ -81,11 +90,11 @@ public class Path {
     }
 
     public int getOverDemand() {
-        return (demandBalance > 0)? demandBalance : 0;
+        return overDemand;
     }
 
     public boolean isFeasible() {
-        return demandBalance <= 0;
+        return overDemand == 0;
     }
 
     public int getStepCount() {
@@ -97,6 +106,10 @@ public class Path {
         return steps.indexOf(nodeIndex);
     }
 
+    public Problem getProblem() {
+        return graph;
+    }
+
     @Override
     public String toString() {
         // TODO: use builder.
@@ -104,6 +117,7 @@ public class Path {
         for (Integer i : steps) {
             s += i + " ";
         }
+        s += "c:" + cost + " db:" + demandBalance + " od:" + overDemand;
         return s;
     }
 }
