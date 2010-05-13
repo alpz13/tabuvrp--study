@@ -19,7 +19,7 @@ public class TabuStage implements Stage {
         this.solution = solution;
         this.params = params;
         this.tabuIndex = tabuIndex;
-        f2 = solution.getCost() + params.getAlpha() * solution.getOverDemand();
+        f2 = solution.getCost() + params.getAlpha() * solution.getInfIndex();
     }
 
     public void runStage() {
@@ -107,12 +107,12 @@ public class TabuStage implements Stage {
     protected double f2ForMove(Integer sourceNode,
                                     Integer targetNode,
                                     int position) {
+        int infIndex = solution.getInfIndex() + 
+                solution.deltaInfIndexForMove(sourceNode, targetNode, position);
+
         return    solution.getCost()
                 + solution.deltaCostForMove(sourceNode, targetNode, position)
-                + params.getAlpha() *
-                  (   solution.getOverDemand()
-                    + solution.deltaOverDemandForMove(sourceNode, targetNode, position)
-                  );
+                + params.getAlpha() * ((infIndex > 0)? infIndex : 0) ;
     }
 
     protected ArrayList<Integer> getRandomNodeIndexes(int count) {
