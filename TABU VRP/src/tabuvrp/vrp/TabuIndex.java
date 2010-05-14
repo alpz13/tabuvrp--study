@@ -19,40 +19,48 @@ public class TabuIndex<S, T> {
     }
 
     public boolean isTabu(S src, T tgt) {
-        return tgtToSrc.containsKey(tgt) &&
-                tgtToSrc.get(tgt).contains(src);
+        return src != null &&
+               tgt != null &&
+               tgtToSrc.containsKey(tgt) &&
+               tgtToSrc.get(tgt).contains(src);
     }
 
     public void setTabu(S src, T tgt, int expireAfter) {
-        if (expireAfter < 0 || expireAfter > maxExpTime) {
+        if (   expireAfter < 0
+            || expireAfter > maxExpTime) {
             return;
         }
-        if ((src == null) || (tgt == null)) {
+        if (   src == null
+            || tgt == null ) {
             throw new IllegalArgumentException("cannot set null values as tabu");
         }
-        HashSet<S> set;
-        if (tgtToSrc.containsKey(tgt)) {
-            set = tgtToSrc.get(tgt);
+
+        HashSet<S> set = tgtToSrc.get(tgt);
+        if (set == null) {
+            /* Target DOESN'T HAVE a tabu set */
+            //   1) create a new tabu set:
+            set = new HashSet<S>();
+            //   2) link it to the target:
+            tgtToSrc.put(tgt, set);
+        }
+        else {
+            /* Target HAS a tabu set */
             if (set.contains(src)) {
-                // already in tabu list
+                // source is already in target's tabu set:
                 return;
             }
         }
-        else {
-            // create tabu set
-            set = new HashSet<S>();
-            // register set
-            tgtToSrc.put(tgt, set);
-        }
-        // add to tabu set
+
+        /* The set is now linked to target */
+        //   3) add source to target's tabu set:
         set.add(src);
 
-        // create an expiration record
-        Tuple2<S, T> expRecord = new Tuple2<S, T>(src, tgt);
 
-        // insert expiration record
+        /* Schedule the expiration */
+        Tuple2<S, T> expRecord = new Tuple2<S, T>(src, tgt);
         Integer expTime = (now + expireAfter + 1) % (maxExpTime + 1);
         HashSet<Tuple2<S, T>> expSet;
+
         if (expirations.containsKey(expTime)) {
             expSet = expirations.get(expTime);
         }
@@ -60,6 +68,9 @@ public class TabuIndex<S, T> {
             expSet = new HashSet<Tuple2<S, T>>();
             expirations.put(expTime, expSet);
         }
+
+        /* The expiration set is now linked to the expiration date */
+        //   add the expiration record to the set:
         expSet.add(expRecord);
     }
 
