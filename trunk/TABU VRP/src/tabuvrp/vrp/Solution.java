@@ -1,17 +1,18 @@
 package tabuvrp.vrp;
 
+import tabuvrp.core.Graph;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Solution {
 
-    protected final Problem problem;
+    protected final Graph problem;
     protected final ArrayList<Path> paths;
     protected final HashMap<Integer, Path> nodesToPaths;
     protected int cost;
     protected int infIndex;
 
-    public Solution(Problem problem) {
+    public Solution(Graph problem) {
         this.problem = problem;
         paths = new ArrayList<Path>(problem.getNodeCount());
         nodesToPaths = new HashMap<Integer, Path>();

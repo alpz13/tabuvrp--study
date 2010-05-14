@@ -1,19 +1,21 @@
 package tabuvrp.vrp;
 
+import tabuvrp.core.Stage;
+import tabuvrp.core.Graph;
 import java.util.ArrayList;
 
 public class TabuStage implements Stage {
 
-    protected final Problem problem;
+    protected final Graph problem;
     protected final TabuStagePolicy params;
-    protected final TabuIndex tabuIndex;
+    protected final TabuIndex<Integer, Integer> tabuIndex;
     protected final Solution solution;
     protected boolean stopRequired;
     protected double f2;
 
-    public TabuStage(Problem problem,
+    public TabuStage(Graph problem,
             TabuStagePolicy params,
-            TabuIndex tabuIndex,
+            TabuIndex<Integer, Integer> tabuIndex,
             Solution solution) {
         this.problem = problem;
         this.solution = solution;
@@ -47,10 +49,12 @@ public class TabuStage implements Stage {
 
         ArrayList<Integer> W = getRandomNodeIndexes(params.getQ());
 
+
         double minF2 = Double.MAX_VALUE;
         Integer i_best = -1;
         Integer p_best = -1;
         int pos_best = -1;
+        boolean move = false;
 
         for (Integer i : W) {
 
@@ -81,6 +85,7 @@ public class TabuStage implements Stage {
                         p_best = p;
                         pos_best = pos;
                         minF2 = tmpF2;
+                        move = true;
                     }
                     else {
                         System.err.println();
@@ -89,17 +94,23 @@ public class TabuStage implements Stage {
             }    
         }
 
-        System.err.println("\nmove " + i_best + " " + p_best + " " + pos_best);
+        if (move) {
+            System.err.println("\nmove " + i_best + " " + p_best + " " + pos_best);
         
-        solution.move(i_best, p_best, pos_best);
+            solution.move(i_best, p_best, pos_best);
 
-        if (minF2 < f2) {
-            System.err.print("f2: " + f2 + " -> ");
-            f2 = minF2;
-            System.err.println(f2 + " *");
+            if (minF2 < f2) {
+                System.err.print("f2: " + f2 + " -> ");
+                f2 = minF2;
+                System.err.println(f2 + " *");
+            }
+                tabuIndex.setTabu(i_best, p_best, params.getTheta());
+        }
+        else {
+            System.err.println("no moves for this step");
         }
 
-        tabuIndex.setTabu(i_best, p_best);
+        
 
     }
 

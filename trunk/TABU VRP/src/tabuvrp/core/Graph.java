@@ -1,6 +1,7 @@
-package tabuvrp.vrp;
+package tabuvrp.core;
 
-public interface Problem {
+
+public interface Graph {
 
     public Node getNode(int n);
 

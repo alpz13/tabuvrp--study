@@ -1,10 +1,13 @@
 package tabuvrp.vrp;
 
+import tabuvrp.core.Graph;
+import tabuvrp.core.Node;
+import tabuvrp.core.Edge;
 import java.util.Arrays;
 import java.util.Comparator;
 
 
-public class VRP implements Problem {
+public class VRP implements Graph {
 
 
     class Util implements Comparator<Integer> {

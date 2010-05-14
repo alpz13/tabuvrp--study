@@ -1,9 +1,7 @@
-package tabuvrp.vrp;
+package tabuvrp.core;
+
 
 public interface Stage {
 
     public void runStage();
-
-    public void stopStage();
-    
 }
