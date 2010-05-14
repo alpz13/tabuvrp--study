@@ -1,17 +1,19 @@
 package tabuvrp.vrp;
 
+import tabuvrp.core.Graph;
+import tabuvrp.core.Node;
 import java.util.ArrayList;
 
 
 public class Path {
 
-    protected final Problem graph;
+    protected final Graph graph;
     protected final ArrayList<Integer> steps;
     protected int cost;
     protected int demandBalance;
     protected int overDemand;
 
-    public Path(Problem graph) {
+    public Path(Graph graph) {
         this.graph = graph;
         steps = new ArrayList<Integer>();
         cost = 0;
@@ -102,11 +104,10 @@ public class Path {
     }
 
     public int getPositionByNodeIndex(Integer nodeIndex) {
-        // TODO: need faster lookup.
         return steps.indexOf(nodeIndex);
     }
 
-    public Problem getProblem() {
+    public Graph getProblem() {
         return graph;
     }
 

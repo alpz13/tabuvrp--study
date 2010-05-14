@@ -1,4 +1,5 @@
-package tabuvrp.vrp;
+package tabuvrp.core;
+
 
 public final class Edge {
 
