@@ -1,94 +1,134 @@
 package tabuvrp.vrp;
 
-import java.util.HashSet;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.ArrayList;
 
 
 public class TabuIndex<S, T> {
 
-    protected final HashMap<T, HashSet<S>> tgtToSrc;
-    protected final HashMap<Integer, HashSet<Tuple2<S, T>>> expirations;
+    protected final HashMap<T, HashSet<S>> tabu;
+    protected final HashMap<T, HashSet<Integer>> backptrs;
+    protected final ArrayList<HashMap<T, HashSet<S>>> expirations;
     protected final int maxExpTime;
     protected int now;
 
+
     public TabuIndex(int maxExpirationTime) {
-        tgtToSrc = new HashMap<T, HashSet<S>>();
-        expirations = new HashMap<Integer, HashSet<Tuple2<S, T>>>();
+        if (maxExpirationTime < 0) {
+            throw new IllegalArgumentException("cannot instantiate a tabu index with maximum expiration time < 0");
+        }
+        tabu = new HashMap<T, HashSet<S>>();
+        backptrs = new HashMap<T, HashSet<Integer>>();
+        expirations = new ArrayList<HashMap<T, HashSet<S>>>(maxExpirationTime + 1);
+        for (int i = 0; i < maxExpirationTime + 1; ++i) {
+            expirations.add(new HashMap<T, HashSet<S>>());
+        }
         maxExpTime = maxExpirationTime;
         now = 0;
     }
 
-    public boolean isTabu(S src, T tgt) {
-        return src != null &&
-               tgt != null &&
-               tgtToSrc.containsKey(tgt) &&
-               tgtToSrc.get(tgt).contains(src);
-    }
-
-    public void setTabu(S src, T tgt, int expireAfter) {
-        if (   expireAfter < 0
-            || expireAfter > maxExpTime) {
+    public void setTabu(S source, T target, int expireAfter) {
+        /* Pre-checks */
+        if (expireAfter < 0) {
             return;
         }
-        if (   src == null
-            || tgt == null ) {
+        if (expireAfter > maxExpTime) {
+            throw new IllegalArgumentException("expiration time not in [0.." + maxExpTime + "]");
+        }
+        if (   source == null
+            || target == null ) {
             throw new IllegalArgumentException("cannot set null values as tabu");
         }
 
-        HashSet<S> set = tgtToSrc.get(tgt);
-        if (set == null) {
-            /* Target DOESN'T HAVE a tabu set */
-            //   1) create a new tabu set:
-            set = new HashSet<S>();
-            //   2) link it to the target:
-            tgtToSrc.put(tgt, set);
+        /* Mark tabu */
+        HashSet<S> sources = tabu.get(target);
+        if (sources == null) {
+            // 'target' doesn't have a tabu set: make it
+            sources = new HashSet<S>();
+            tabu.put(target, sources);
         }
         else {
-            /* Target HAS a tabu set */
-            if (set.contains(src)) {
-                // source is already in target's tabu set:
+            if (sources.contains(source)) {
+                // 'source' is already tabu for 'target': return
                 return;
             }
         }
+        // add 'source' as tabu for 'target'
+        sources.add(source);
 
-        /* The set is now linked to target */
-        //   3) add source to target's tabu set:
-        set.add(src);
-
-
-        /* Schedule the expiration */
-        Tuple2<S, T> expRecord = new Tuple2<S, T>(src, tgt);
+        /* Schedule expiration */
         Integer expTime = (now + expireAfter + 1) % (maxExpTime + 1);
-        HashSet<Tuple2<S, T>> expSet;
-
-        if (expirations.containsKey(expTime)) {
-            expSet = expirations.get(expTime);
+        HashMap<T, HashSet<S>> expMap = expirations.get(expTime);
+        HashSet<S> expSet = expMap.get(target);
+        if (expSet == null) {
+            expSet = new HashSet<S>();
+            expMap.put(target, expSet);
         }
-        else {
-            expSet = new HashSet<Tuple2<S, T>>();
-            expirations.put(expTime, expSet);
+        expSet.add(source);
+
+        /* Add backpointer */
+        HashSet<Integer> expTimes = backptrs.get(target);
+        if (expTimes == null) {
+            expTimes = new HashSet<Integer>();
+            backptrs.put(target, expTimes);
+        }
+        expTimes.add(expTime);
+    }
+
+    public void clearTarget(T target) {
+        /* Pre-checks */
+        if (target == null) {
+            return;
+        }
+        HashSet<S> sources = tabu.get(target);
+        if (sources == null) {
+            return;
         }
 
-        /* The expiration set is now linked to the expiration date */
-        //   add the expiration record to the set:
-        expSet.add(expRecord);
+        /* Remove tabu entries for 'target' */
+        tabu.remove(target);
+
+
+        /* Remove scheduled expirations for 'target' */
+        for (Integer time : backptrs.get(target)) {
+            expirations.get(time).remove(target);
+        }
+
+        /* Remove backpointers for 'target' */
+        backptrs.remove(target);
+    }
+
+    public boolean isTabu(S source, T target) {
+        if (   source == null
+            || target == null ) {
+            return false;
+        }
+        HashSet<S> sources = tabu.get(target);
+        return (sources != null &&
+                sources.contains(source) );
     }
 
     public void step() {
         now = (now + 1) % (maxExpTime + 1);
+        HashMap<T, HashSet<S>> expMap = expirations.get(now);
         
-        if (!expirations.containsKey(now)) {
-            return;
-        }
-        
-        HashSet<Tuple2<S, T>> expSet = expirations.get(now);
-        for (Tuple2<S, T> expRecord : expSet) {
-            HashSet<S> sources = tgtToSrc.get(expRecord.getSecond());
-            if (sources != null) {
-                sources.remove(expRecord.getFirst());
+        for (T target : expMap.keySet()) {
+
+            HashSet<S> expSources = expMap.get(target);
+            tabu.get(target).removeAll(expSources);
+            if (expSources.isEmpty()) {
+                tabu.remove(target);
+            }
+
+            HashSet<Integer> targetBackptrs = backptrs.get(target);
+            targetBackptrs.remove(now);
+            if (targetBackptrs.isEmpty()) {
+                backptrs.remove(target);
             }
         }
-        expSet.clear();
+
+        expMap.clear();
     }
 
 }

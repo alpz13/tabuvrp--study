@@ -11,11 +11,11 @@ public final class Tuple2<E1, E2> {
         this.second = second;
     }
 
-    public final E1 getFirst() {
+    public final E1 first() {
         return first;
     }
 
-    public final E2 getSecond() {
+    public final E2 second() {
         return second;
     }
 }
