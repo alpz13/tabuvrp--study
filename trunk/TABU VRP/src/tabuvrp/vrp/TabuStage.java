@@ -3,13 +3,16 @@ package tabuvrp.vrp;
 import tabuvrp.core.Stage;
 import tabuvrp.core.Graph;
 import java.util.ArrayList;
+import java.util.Set;
 
-public class TabuStage extends Stage {
+
+public class TabuStage extends Stage implements Filter<Integer, Integer> {
 
     protected final Graph problem;
     protected final TabuStagePolicy params;
     protected final TabuIndex<Integer, Integer> tabuIndex;
     protected final Solution solution;
+    protected final PriorityGenerator generator;
     protected boolean stopRequired;
     protected double f2;
 
@@ -22,6 +25,7 @@ public class TabuStage extends Stage {
         this.solution = solution;
         this.params = params;
         this.tabuIndex = tabuIndex;
+        generator = new PriorityGenerator(problem.getNeighbourhood());
         f2 = solution.getCost() + params.getAlpha() * solution.getInfIndex();
     }
 
@@ -61,7 +65,7 @@ public class TabuStage extends Stage {
 
         for (Integer i : W) {
 
-            int[] P = problem.getNeighbourhood(i, params.getP());
+            Set<Integer> P = generator.extract(i, params.getP(), this);
             
             for (Integer p : P) {
 
@@ -140,6 +144,11 @@ public class TabuStage extends Stage {
             }
         }
         return indexes;
+    }
+
+    public boolean filter(Integer e1, Integer e2) {
+        return     e2 == 0
+                || solution.inSamePath(e1, e2);
     }
 
 }

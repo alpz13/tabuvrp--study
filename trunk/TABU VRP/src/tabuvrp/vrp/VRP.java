@@ -30,7 +30,7 @@ public class VRP implements Graph {
 
     protected Edge[][] edges;
 
-    protected int[][] neighbourhood;
+    protected Integer[][] neighbourhood;
 
     protected final int nodeCount;
 
@@ -40,8 +40,7 @@ public class VRP implements Graph {
         this.nodes = new Node[n];
 
         this.edges = new Edge[n][n];
-        neighbourhood = new int[n][n];
-        Integer[] tmp = new Integer[n];
+        neighbourhood = new Integer[n][n - 1];
 
         for (int i = 0; i < n; ++i) {
 
@@ -50,23 +49,18 @@ public class VRP implements Graph {
             Comparator<Integer> comp = new Util(edges, i);
 
             int j;
-            for (j = 0; j < n; ++j) {
-                this.edges[i][j] = new Edge(edgeValues[i][j]);
-                tmp[j] = j;
-            }
-
-            Arrays.sort(tmp, comp);
-
-            j = 0;
             int k = 0;
-            while(j < n) {
-                if ((tmp[j] != i) && (tmp[j] != 0)) {
-                    neighbourhood[i][k] = tmp[j];
-                    k += 1;
+            for (j = 0; j < n; ++j) {
+                if (i == j) {
+                    this.edges[i][j] = new Edge(0);
                 }
-                j += 1;
+                else {
+                    this.edges[i][j] = new Edge(edgeValues[i][j]);
+                    neighbourhood[i][k] = j;
+                    k += 1;
+                }                
             }
-
+            Arrays.sort(neighbourhood[i], comp);
         }
 
         nodeCount = n;
@@ -88,7 +82,11 @@ public class VRP implements Graph {
     }
 
     
-    public int[] getNeighbourhood(int n, int count) {
-        return Arrays.copyOf(neighbourhood[n], count);
+    public Integer[][] getNeighbourhood() {
+        Integer[][] tmp = new Integer[nodeCount][nodeCount - 1];
+        for (int i = 0; i < neighbourhood.length; ++i) {
+         tmp[i] = Arrays.copyOf(neighbourhood[i], neighbourhood[i].length);
+        }
+        return tmp;
     }
 }
