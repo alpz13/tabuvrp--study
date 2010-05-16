@@ -58,7 +58,7 @@ public class VRP implements Graph {
                     this.edges[i][j] = new Edge(edgeValues[i][j]);
                     neighbourhood[i][k] = j;
                     k += 1;
-                }                
+                }
             }
             Arrays.sort(neighbourhood[i], comp);
         }
