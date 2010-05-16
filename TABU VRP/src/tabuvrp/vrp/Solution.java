@@ -4,6 +4,7 @@ import tabuvrp.core.Graph;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+
 public class Solution {
 
     protected final Graph problem;
