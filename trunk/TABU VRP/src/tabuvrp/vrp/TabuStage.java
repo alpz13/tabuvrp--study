@@ -147,8 +147,8 @@ public class TabuStage extends Stage implements Filter<Integer, Integer> {
     }
 
     public boolean filter(Integer e1, Integer e2) {
-        return     e2 == 0
-                || solution.inSamePath(e1, e2);
+        return    e2 == 0
+               || solution.inSamePath(e1, e2);
     }
 
 }
