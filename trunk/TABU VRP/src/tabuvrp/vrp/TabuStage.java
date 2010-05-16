@@ -4,7 +4,7 @@ import tabuvrp.core.Stage;
 import tabuvrp.core.Graph;
 import java.util.ArrayList;
 
-public class TabuStage implements Stage {
+public class TabuStage extends Stage {
 
     protected final Graph problem;
     protected final TabuStagePolicy params;
@@ -17,6 +17,7 @@ public class TabuStage implements Stage {
             TabuStagePolicy params,
             TabuIndex<Integer, Integer> tabuIndex,
             Solution solution) {
+        super();
         this.problem = problem;
         this.solution = solution;
         this.params = params;
@@ -36,6 +37,8 @@ public class TabuStage implements Stage {
             doStep();
             params.step();
             tabuIndex.step();
+            
+            notifyAll_StepDone();
 
             System.err.println(solution);
         }
