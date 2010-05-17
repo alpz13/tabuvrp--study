@@ -11,14 +11,12 @@ public class Path {
     protected final ArrayList<Integer> steps;
     protected int cost;
     protected int demandBalance;
-    protected int overDemand;
 
     public Path(Graph graph) {
         this.graph = graph;
         steps = new ArrayList<Integer>();
         cost = 0;
         demandBalance = graph.getNode(0).getDemand();
-        overDemand = 0;
     }
 
     public boolean isEmpty() {
@@ -28,14 +26,12 @@ public class Path {
     public void insert(int position, Integer nodeIndex) {
         cost += deltaCostForInsert(position, nodeIndex);
         demandBalance += deltaDemandBalanceForInsert(nodeIndex);
-        overDemand += deltaOverDemandForInsert(nodeIndex);
         steps.add(position, nodeIndex);
     }
 
     public void remove(int position) {
         cost += deltaCostForRemove(position);
         demandBalance += deltaDemandBalanceForRemove(position);
-        overDemand += deltaOverDemandForRemove(position);
         steps.remove(position);
     }
 
@@ -56,11 +52,6 @@ public class Path {
         return graph.getNode(nodeIndex).getDemand();
     }
 
-    public int deltaOverDemandForInsert(Integer nodeIndex) {
-        int newDem = graph.getNode(nodeIndex).getDemand();
-        return  (newDem > 0)? newDem : 0;
-    }
-
     public int deltaCostForRemove(int position) {
         if (steps.size() <= 1) {
             return -cost;
@@ -78,11 +69,6 @@ public class Path {
         return node.getDemand();
     }
 
-    public int deltaOverDemandForRemove(int position) {
-        int nodeDemand = graph.getNode(steps.get(position)).getDemand();
-        return (overDemand - nodeDemand < 0)? (- overDemand) : (- nodeDemand);
-    }
-
     public int getCost() {
         return cost;
     }
@@ -91,12 +77,8 @@ public class Path {
         return demandBalance;
     }
 
-    public int getOverDemand() {
-        return overDemand;
-    }
-
     public boolean isFeasible() {
-        return overDemand == 0;
+        return demandBalance <= 0;
     }
 
     public int getStepCount() {
@@ -118,7 +100,7 @@ public class Path {
         for (Integer i : steps) {
             s += i + " ";
         }
-        s += "c:" + cost + " db:" + demandBalance + " od:" + overDemand;
+        s += "cost:" + cost + " demand:" + demandBalance;
         return s;
     }
 }
