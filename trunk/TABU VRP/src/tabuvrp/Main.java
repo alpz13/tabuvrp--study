@@ -8,7 +8,7 @@ public class Main {
     
     public static void main(String[] args) {
         VRP vrp = new VRP(
-                new Integer[]{-50, 1, 2, 3, 4, 5},
+                new Integer[]{-13, 1, 2, 3, 4, 5},
                 new Integer[][]{
                     new Integer[]{ 0, 01, 02, 03, 04, 05},
                     new Integer[]{01,  0, 12, 13, 14, 15},
@@ -24,7 +24,7 @@ public class Main {
             s0sol.addPath(i);
         }
 
-        TabuStagePolicy s0params = new TabuStagePolicy0(s0sol, 0.5, 3, 2, 4, 1);
+        TabuStagePolicy s0params = new TabuStagePolicy0(s0sol, 0.1, 3, 2, 4, 2);
         TabuIndex<Integer, Integer> s0index = new TabuIndex<Integer, Integer>(s0params.getTheta());
         Stage s0 = new TabuStage(vrp, s0params, s0index, s0sol);
 

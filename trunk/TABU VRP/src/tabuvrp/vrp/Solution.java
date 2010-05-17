@@ -38,7 +38,7 @@ public class Solution {
         p.insert(0, nodeIndex);
         nodesToPaths.put(nodeIndex, p);
         cost += p.getCost();
-        infIndex += p.getDemandBalance();
+        infIndex -= p.getDemandBalance();
         paths.add(p);
     }
 
@@ -77,8 +77,8 @@ public class Solution {
                                          int position) {
         Path sourcePath = nodesToPaths.get(sourceNode);
         Path targetPath = nodesToPaths.get(targetNode);
-        return sourcePath.deltaDemandBalanceForRemove(sourcePath.getPositionByNodeIndex(sourceNode))
-                + targetPath.deltaDemandBalanceForInsert(sourceNode);
+        return - (sourcePath.deltaDemandBalanceForRemove(sourcePath.getPositionByNodeIndex(sourceNode))
+                + targetPath.deltaDemandBalanceForInsert(sourceNode));
     }
 
     public int getCost() {
@@ -88,7 +88,6 @@ public class Solution {
     public int getInfIndex() {
         return infIndex;
     }
-
 
     @Override
     public String toString() {

@@ -6,50 +6,27 @@ import java.util.ArrayList;
 import java.util.Set;
 
 
-public class TabuStage extends Stage implements Filter<Integer, Integer> {
+public class TabuStage extends Stage implements MoveGenFilter {
 
     protected final Graph problem;
     protected final TabuStagePolicy params;
     protected final TabuIndex<Integer, Integer> tabuIndex;
     protected final Solution solution;
-    protected final PriorityGenerator generator;
-    protected boolean stopRequired;
+    protected final MoveGenerator generator;
     protected double f2;
 
     public TabuStage(Graph problem,
             TabuStagePolicy params,
             TabuIndex<Integer, Integer> tabuIndex,
             Solution solution) {
-        super();
         this.problem = problem;
         this.solution = solution;
         this.params = params;
         this.tabuIndex = tabuIndex;
-        generator = new PriorityGenerator(problem.getNeighbourhood());
-        f2 = solution.getCost() + params.getAlpha() * solution.getInfIndex();
-    }
-
-    public void runStage() {
-        stopRequired = false;
-        System.err.println(">> INIT");
-        System.err.println(solution);
-        System.err.println("f2: " + f2 + "*");
-
-        while (!stopRequired) {
-            System.err.println("\n>> STEP");
-
-            doStep();
-            params.step();
-            tabuIndex.step();
-            
-            notifyAll_StepDone();
-
-            System.err.println(solution);
-        }
-    }
-
-    public void stopStage() {
-        stopRequired = true;
+        this.generator = new MoveGenerator(problem.getNeighbourhood());
+        generator.setFilter(this);
+        f2 = solution.getCost() + params.getAlpha() * ((solution.getInfIndex() > 0)? solution.getInfIndex() : 0);
+        System.err.println("f2: " + f2);
     }
 
     protected void doStep() {
@@ -65,21 +42,11 @@ public class TabuStage extends Stage implements Filter<Integer, Integer> {
 
         for (Integer i : W) {
 
-            Set<Integer> P = generator.extract(i, params.getP(), this);
+            Set<Integer> P = generator.extract(i, params.getP());
             
             for (Integer p : P) {
 
-                System.err.println("\ni:" + i + " p: " + p);
-
-                if (tabuIndex.isTabu(i, p)) {
-                    System.err.println("\ttabu: skip");
-                    continue;
-                }
-
-                if (solution.inSamePath(i, p)) {
-                    System.err.println("\tsame path: skip");
-                    continue;
-                }
+                System.err.println("i:" + i + " p: " + p);
                 
                 int pathSize = solution.getPathSizeByNodeIndex(p);
                 for (int pos = 0; pos < pathSize + 1; ++pos) {
@@ -111,14 +78,16 @@ public class TabuStage extends Stage implements Filter<Integer, Integer> {
                 f2 = minF2;
                 System.err.println(f2 + " *");
             }
-                tabuIndex.setTabu(i_best, p_best, params.getTheta());
+            else {
+                System.err.println("f2: " + f2);
+            }
+
+            tabuIndex.setTabu(i_best, p_best, params.getTheta());
         }
         else {
             System.err.println("no moves for this step");
         }
-
-        
-
+        System.err.println(solution);
     }
 
 
@@ -146,9 +115,10 @@ public class TabuStage extends Stage implements Filter<Integer, Integer> {
         return indexes;
     }
 
+
     public boolean filter(Integer e1, Integer e2) {
         return    e2 == 0
-               || solution.inSamePath(e1, e2);
+               || solution.inSamePath(e1, e2)
+               || tabuIndex.isTabu(e1, e2);
     }
-
 }
