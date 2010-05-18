@@ -1,5 +1,9 @@
 package tabuvrp;
 
+import tabuvrp.tabu.TabuIndex;
+import tabuvrp.tabu.TabuStageParams;
+import tabuvrp.tabu.BasicTabuStageParams;
+import tabuvrp.tabu.TabuStage;
 import tabuvrp.core.Stage;
 import tabuvrp.vrp.*;
 
@@ -24,7 +28,7 @@ public class Main {
             s0sol.addPath(i);
         }
 
-        TabuStagePolicy s0params = new TabuStagePolicy0(s0sol, 0.1, 3, 2, 4, 2);
+        TabuStageParams s0params = new BasicTabuStageParams(s0sol, 0.1, 3, 2, 4, 2);
         TabuIndex<Integer, Integer> s0index = new TabuIndex<Integer, Integer>(s0params.getTheta());
         Stage s0 = new TabuStage(vrp, s0params, s0index, s0sol);
 

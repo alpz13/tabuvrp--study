@@ -1,22 +1,15 @@
-package tabuvrp.vrp;
+package tabuvrp.tabu;
 
 
-public interface TabuStagePolicy {
-
+public interface TabuStageParams {
 
     public void step();
 
-
     public double getAlpha();
-
 
     public int getP();
 
-
     public int getQ();
 
-
     public int getTheta();
-
-    
 }

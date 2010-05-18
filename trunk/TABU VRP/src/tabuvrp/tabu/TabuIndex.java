@@ -1,4 +1,4 @@
-package tabuvrp.vrp;
+package tabuvrp.tabu;
 
 import java.util.HashMap;
 import java.util.HashSet;

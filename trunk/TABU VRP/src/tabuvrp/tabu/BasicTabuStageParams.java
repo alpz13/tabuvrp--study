@@ -1,7 +1,9 @@
-package tabuvrp.vrp;
+package tabuvrp.tabu;
+
+import tabuvrp.vrp.Solution;
 
 
-public final class TabuStagePolicy0 implements TabuStagePolicy {
+public final class BasicTabuStageParams implements TabuStageParams {
 
     protected final Solution solution;
     protected long noFeasTransStreak;
@@ -12,7 +14,7 @@ public final class TabuStagePolicy0 implements TabuStagePolicy {
     protected final int Q;
     protected final int THETA;
 
-    public TabuStagePolicy0(Solution solution,
+    public BasicTabuStageParams(Solution solution,
             double initialAlpha,
             int beta,
             int p,
