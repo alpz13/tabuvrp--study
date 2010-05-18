@@ -1,38 +1,37 @@
-package tabuvrp.vrp;
+package tabuvrp.tabu;
 
 import tabuvrp.core.Stage;
 import tabuvrp.core.Graph;
-import java.util.ArrayList;
+//import java.util.ArrayList;
 import java.util.Set;
+import tabuvrp.vrp.Solution;
 
 
-public class TabuStage extends Stage implements MoveGenFilter {
+public class TabuStage extends Stage {
 
     protected final Graph problem;
-    protected final TabuStagePolicy params;
+    protected final TabuStageParams params;
     protected final TabuIndex<Integer, Integer> tabuIndex;
     protected final Solution solution;
-    protected final MoveGenerator generator;
+    protected final TabuMoveGenerator generator;
     protected double f2;
 
     public TabuStage(Graph problem,
-            TabuStagePolicy params,
+            TabuStageParams params,
             TabuIndex<Integer, Integer> tabuIndex,
             Solution solution) {
         this.problem = problem;
         this.solution = solution;
         this.params = params;
         this.tabuIndex = tabuIndex;
-        this.generator = new MoveGenerator(problem.getNeighbourhood());
-        generator.setFilter(this);
+        this.generator = new TabuMoveGenerator(problem, solution, tabuIndex);
         f2 = solution.getCost() + params.getAlpha() * ((solution.getInfIndex() > 0)? solution.getInfIndex() : 0);
         System.err.println("f2: " + f2);
     }
 
     protected void doStep() {
 
-        ArrayList<Integer> W = getRandomNodeIndexes(params.getQ());
-
+        Set<Integer> W = generator.getRandomNodeIndexes(params.getQ());
 
         double minF2 = Double.MAX_VALUE;
         Integer i_best = -1;
@@ -102,23 +101,5 @@ public class TabuStage extends Stage implements MoveGenFilter {
                 + params.getAlpha() * ((infIndex > 0)? infIndex : 0) ;
     }
 
-    protected ArrayList<Integer> getRandomNodeIndexes(int count) {
-        ArrayList<Integer> indexes = new ArrayList<Integer>(count);
-        int i = 0;
-        while (i < count) {
-            int rnd = (int) Math.round(Math.random() * count);
-            if (!indexes.contains(rnd) && (rnd != 0)) {
-                indexes.add(rnd);
-                i += 1;
-            }
-        }
-        return indexes;
-    }
 
-
-    public boolean filter(Integer e1, Integer e2) {
-        return    e2 == 0
-               || solution.inSamePath(e1, e2)
-               || tabuIndex.isTabu(e1, e2);
-    }
 }
