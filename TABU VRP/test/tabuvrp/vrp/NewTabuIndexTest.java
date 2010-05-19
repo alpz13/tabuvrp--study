@@ -1,6 +1,6 @@
 package tabuvrp.vrp;
 
-import tabuvrp.tabu.TabuIndex;
+import tabuvrp.stages.tabu.TabuIndex;
 import junit.framework.TestCase;
 
 
