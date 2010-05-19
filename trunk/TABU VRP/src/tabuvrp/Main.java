@@ -1,10 +1,11 @@
 package tabuvrp;
 
-import tabuvrp.tabu.TabuIndex;
-import tabuvrp.tabu.TabuStageParams;
-import tabuvrp.tabu.BasicTabuStageParams;
-import tabuvrp.tabu.TabuStage;
-import tabuvrp.core.Stage;
+import tabuvrp.core.Solution;
+import tabuvrp.stages.tabu.TabuIndex;
+import tabuvrp.stages.tabu.TabuStageParams;
+import tabuvrp.stages.tabu.BasicTabuStageParams;
+import tabuvrp.stages.tabu.TabuStage;
+import tabuvrp.stages.Stage;
 import tabuvrp.vrp.*;
 
 public class Main {
@@ -25,11 +26,11 @@ public class Main {
         Solution s0sol = new Solution(vrp);
 
         for(int i = 1; i < vrp.getNodeCount(); ++i) {
-            s0sol.addPath(i);
+            s0sol.makePath(i);
         }
 
-        TabuStageParams s0params = new BasicTabuStageParams(s0sol, 0.1, 3, 2, 4, 2);
-        TabuIndex<Integer, Integer> s0index = new TabuIndex<Integer, Integer>(s0params.getTheta());
+        TabuStageParams s0params = new BasicTabuStageParams(s0sol, 0.1, 3, 2, 4, 2, 6);
+        TabuIndex<Integer, Integer> s0index = new TabuIndex<Integer, Integer>(s0params.getMaxTheta());
         Stage s0 = new TabuStage(vrp, s0params, s0index, s0sol);
 
         s0.runStage();

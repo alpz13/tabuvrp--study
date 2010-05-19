@@ -1,4 +1,4 @@
-package tabuvrp.core;
+package tabuvrp.stages;
 
 import java.util.HashSet;
 

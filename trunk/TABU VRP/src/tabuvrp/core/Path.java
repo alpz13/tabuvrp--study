@@ -1,4 +1,4 @@
-package tabuvrp.vrp;
+package tabuvrp.core;
 
 import tabuvrp.core.Graph;
 import tabuvrp.core.Node;
@@ -13,6 +13,9 @@ public class Path {
     protected int demandBalance;
 
     public Path(Graph graph) {
+        if (graph == null) {
+            throw new IllegalArgumentException("'graph' is null");
+        }
         this.graph = graph;
         steps = new ArrayList<Integer>();
         cost = 0;
@@ -27,12 +30,6 @@ public class Path {
         cost += deltaCostForInsert(position, nodeIndex);
         demandBalance += deltaDemandBalanceForInsert(nodeIndex);
         steps.add(position, nodeIndex);
-    }
-
-    public void remove(int position) {
-        cost += deltaCostForRemove(position);
-        demandBalance += deltaDemandBalanceForRemove(position);
-        steps.remove(position);
     }
 
     public int deltaCostForInsert(int position, Integer nodeIndex) {
@@ -52,7 +49,15 @@ public class Path {
         return graph.getNode(nodeIndex).getDemand();
     }
 
-    public int deltaCostForRemove(int position) {
+    public void remove(Integer nodeIndex) {
+        int position = getPositionByNodeIndex(nodeIndex);
+        cost += deltaCostForRemove(position);
+        demandBalance += deltaDemandBalanceForRemove(position);
+        steps.remove(position);
+    }
+
+    public int deltaCostForRemove(Integer nodeIndex) {
+        int position = getPositionByNodeIndex(nodeIndex);
         if (steps.size() <= 1) {
             return -cost;
         }
@@ -64,7 +69,8 @@ public class Path {
                 - graph.getEdge(mid, end).getCost();
     }
 
-    public int deltaDemandBalanceForRemove(int position) {
+    public int deltaDemandBalanceForRemove(Integer nodeIndex) {
+        int position = getPositionByNodeIndex(nodeIndex);
         Node node = graph.getNode(steps.get(position));
         return node.getDemand();
     }
@@ -86,7 +92,11 @@ public class Path {
     }
 
     public int getPositionByNodeIndex(Integer nodeIndex) {
-        return steps.indexOf(nodeIndex);
+        int position = steps.indexOf(nodeIndex);
+        if (position == -1) {
+            throw new IllegalArgumentException("'path' doesn't contain 'nodeIndex'");
+        }
+        return position;
     }
 
     public Graph getProblem() {
