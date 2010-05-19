@@ -10,4 +10,6 @@ public interface Graph {
     public Integer[][] getNeighbourhood();
 
     public int getNodeCount();
+
+    public double getMTilde();
 }

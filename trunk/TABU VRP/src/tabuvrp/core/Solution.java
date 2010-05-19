@@ -88,7 +88,9 @@ public class Solution {
     }
 
     public void insert(Integer targetNode, int position, Integer nodeIndex) {
-        getPathByNodeIndex(targetNode).insert(position, nodeIndex);
+        Path path = getPathByNodeIndex(targetNode);
+        path.insert(position, nodeIndex);
+        nodesToPaths.put(nodeIndex, path);
     }
 
     public int deltaCostForInsert(Integer targetNode, int position, Integer nodeIndex) {

@@ -28,8 +28,7 @@ public abstract class Stage {
 
     public void runStage() {
         notifyAll_StageStarted();
-        while (!stopRequired) {
-            doStep();
+        while (!stopRequired && doStep()) {
             notifyAll_StepDone();
         }
         notifyAll_StageStopped();
@@ -57,6 +56,6 @@ public abstract class Stage {
         }
     }
 
-    protected abstract void doStep();
+    protected abstract boolean doStep();
 
 }

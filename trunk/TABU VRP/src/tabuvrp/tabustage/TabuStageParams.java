@@ -16,5 +16,6 @@ public interface TabuStageParams {
     public int getMaxTheta();
     
     public int getTheta();
-    
+
+    public int getMaxSteps();
 }

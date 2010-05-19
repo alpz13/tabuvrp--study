@@ -44,9 +44,9 @@ public class TabuMoveGenerator {
 
     public Set<Integer> getRandomNodeIndexes(int count) {
         final HashSet<Integer> indexes = new HashSet<Integer>();
-        while (indexes.size() < count &&
-               indexes.size() < genMat.length) {
-            Integer index = (int) Math.round(Math.random() * (genMat.length - 2)) + 1;
+        int limit = (count <= genMat.length - 1)? count : genMat.length - 1;
+        while (indexes.size() < limit) {
+            Integer index = (int) Math.round(Math.random() * (genMat.length - 2) + 1);
             indexes.add(index);
         }
         return indexes;
@@ -63,7 +63,6 @@ public class TabuMoveGenerator {
         for (Integer sourceNode : getRandomNodeIndexes(params.getQ())) {
             for (Integer targetNode : extract(sourceNode, params.getP())) {
                 for (int pos = 0; pos <= solution.getPathSizeByNodeIndex(targetNode); ++pos) {
-                    System.err.println("move10 " +sourceNode+" -> "+targetNode+"@"+pos);
                     moves.add(moveGen.Move10(sourceNode, targetNode, pos));
                 }
             }

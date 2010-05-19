@@ -6,14 +6,15 @@ import tabuvrp.core.Solution;
 public final class BasicTabuStageParams implements TabuStageParams {
 
     protected final Solution solution;
-    protected long noFeasTransStreak;
-    protected boolean feasible;
     protected double alpha;
     protected final int BETA;
     protected final int P;
     protected final int Q;
     protected final int MIN_THETA;
     protected final int MAX_THETA;
+    protected final int MAX_STEPS;
+    protected long noFeasTransStreak;
+    protected boolean feasible;
 
     public BasicTabuStageParams(Solution solution,
             double initialAlpha,
@@ -21,7 +22,8 @@ public final class BasicTabuStageParams implements TabuStageParams {
             int p,
             int q,
             int minTheta,
-            int maxTheta) {
+            int maxTheta,
+            int maxSteps) {
         if (solution == null) {
             throw new IllegalArgumentException("'solution' is null");
         }
@@ -51,6 +53,10 @@ public final class BasicTabuStageParams implements TabuStageParams {
         }
         MIN_THETA = minTheta;
         MAX_THETA = maxTheta;
+        if (maxSteps <= 0) {
+            throw new IllegalArgumentException("'max steps' <= 0");
+        }
+        MAX_STEPS = maxSteps;
         noFeasTransStreak = 0;
         feasible = solution.isFeasible();
     }
@@ -90,5 +96,9 @@ public final class BasicTabuStageParams implements TabuStageParams {
     
     public final int getMaxTheta() {
         return MAX_THETA;
+    }
+
+    public final int getMaxSteps() {
+        return MAX_STEPS;
     }
 }
