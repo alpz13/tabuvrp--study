@@ -20,6 +20,28 @@ public class Solution {
         nodesToPaths = new HashMap<Integer, Path>();
     }
 
+    protected Solution(Graph graph,
+                       ArrayList<Path> paths,
+                       HashMap<Integer, Path> nodesToPaths) {
+        this.graph = graph;
+        this.paths = paths;
+        this.nodesToPaths = nodesToPaths;
+    }
+
+    public Solution deepCopy() {
+        ArrayList<Path> newPaths = new ArrayList<Path>(paths.size());
+        for (Path oldPath : paths) {
+            newPaths.add(oldPath.deepCopy());
+        }
+        HashMap<Integer, Path> newNodesToPaths = new HashMap<Integer, Path>();
+        for (Integer i : nodesToPaths.keySet()) {
+            newNodesToPaths.put(i, newPaths.get(paths.indexOf(nodesToPaths.get(i))));
+        }
+        return new Solution(graph,
+                            newPaths,
+                            newNodesToPaths);
+    }
+
     public int getPathSizeByNodeIndex(Integer nodeIndex) {
         return getPathByNodeIndex(nodeIndex).getStepCount();
     }
@@ -30,6 +52,9 @@ public class Solution {
     }
 
     public Path getPathByNodeIndex(Integer index) {
+        if (nodesToPaths.get(index) == null) {
+            System.out.println("as");
+        }
         return nodesToPaths.get(index);
     }
 
@@ -62,16 +87,16 @@ public class Solution {
         return getPathByNodeIndex(nodeIndex).deltaDemandBalanceForRemove(nodeIndex);
     }
 
-    public void insert(int position, Integer nodeIndex) {
-        getPathByNodeIndex(nodeIndex).insert(position, nodeIndex);
+    public void insert(Integer targetNode, int position, Integer nodeIndex) {
+        getPathByNodeIndex(targetNode).insert(position, nodeIndex);
     }
 
-    public int deltaCostForInsert(int position, Integer nodeIndex) {
-        return getPathByNodeIndex(nodeIndex).deltaCostForInsert(position, nodeIndex);
+    public int deltaCostForInsert(Integer targetNode, int position, Integer nodeIndex) {
+        return getPathByNodeIndex(targetNode).deltaCostForInsert(position, nodeIndex);
     }
 
-    public int deltaDemandBalanceForInsert(Integer nodeIndex) {
-        return getPathByNodeIndex(nodeIndex).deltaDemandBalanceForInsert(nodeIndex);
+    public int deltaDemandBalanceForInsert(Integer targetNode, Integer nodeIndex) {
+        return getPathByNodeIndex(targetNode).deltaDemandBalanceForInsert(nodeIndex);
     }
 
     public int getCost() {
