@@ -22,6 +22,24 @@ public class Path {
         demandBalance = graph.getNode(0).getDemand();
     }
 
+    protected Path(Graph graph,
+                   ArrayList<Integer> steps,
+                   int cost,
+                   int demandBalance) {
+        this.graph = graph;
+        this.steps = steps;
+        this.cost = cost;
+        this.demandBalance = demandBalance;
+    }
+    
+    public Path deepCopy() {
+        return new Path(graph, // graph is immutable
+                        new ArrayList<Integer>(steps),
+                        cost,
+                        demandBalance);
+    }
+
+
     public boolean isEmpty() {
         return steps.isEmpty();
     }
@@ -50,9 +68,9 @@ public class Path {
     }
 
     public void remove(Integer nodeIndex) {
+        cost += deltaCostForRemove(nodeIndex);
+        demandBalance += deltaDemandBalanceForRemove(nodeIndex);
         int position = getPositionByNodeIndex(nodeIndex);
-        cost += deltaCostForRemove(position);
-        demandBalance += deltaDemandBalanceForRemove(position);
         steps.remove(position);
     }
 
@@ -94,7 +112,7 @@ public class Path {
     public int getPositionByNodeIndex(Integer nodeIndex) {
         int position = steps.indexOf(nodeIndex);
         if (position == -1) {
-            throw new IllegalArgumentException("'path' doesn't contain 'nodeIndex'");
+            throw new IllegalArgumentException("'path' doesn't contain 'nodeIndex' " + nodeIndex);
         }
         return position;
     }
