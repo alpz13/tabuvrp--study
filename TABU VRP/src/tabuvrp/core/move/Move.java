@@ -1,4 +1,4 @@
-package tabuvrp.core;
+package tabuvrp.core.move;
 
 
 public abstract class Move {

@@ -1,11 +1,11 @@
 package tabuvrp;
 
 import tabuvrp.core.Solution;
-import tabuvrp.stages.tabu.TabuIndex;
-import tabuvrp.stages.tabu.TabuStageParams;
-import tabuvrp.stages.tabu.BasicTabuStageParams;
-import tabuvrp.stages.tabu.TabuStage;
-import tabuvrp.stages.Stage;
+import tabuvrp.tabustage.TabuIndex;
+import tabuvrp.tabustage.TabuStageParams;
+import tabuvrp.tabustage.BasicTabuStageParams;
+import tabuvrp.tabustage.TabuStage;
+import tabuvrp.core.stage.Stage;
 import tabuvrp.vrp.*;
 
 public class Main {

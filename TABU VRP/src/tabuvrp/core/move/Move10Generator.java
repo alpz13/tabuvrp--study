@@ -1,4 +1,7 @@
-package tabuvrp.core;
+package tabuvrp.core.move;
+
+import tabuvrp.core.Path;
+import tabuvrp.core.Solution;
 
 
 public class Move10Generator {

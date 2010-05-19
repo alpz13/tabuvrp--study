@@ -1,6 +1,7 @@
-package tabuvrp.core;
+package tabuvrp.core.move;
 
-import tabuvrp.core.Move;
+import tabuvrp.core.move.Move;
+import tabuvrp.core.Path;
 
 
 public final class Move10 extends Move {
