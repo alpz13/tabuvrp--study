@@ -9,7 +9,8 @@ import java.util.Comparator;
 
 public class VRP implements Graph {
 
-
+    
+    /**************************************************************************/
     class Util implements Comparator<Integer> {
 
         final Edge[][] edges;
@@ -24,16 +25,14 @@ public class VRP implements Graph {
             return Integer.valueOf(edges[i][j1].getCost()).compareTo(edges[i][j2].getCost());
         }
     }
+    /**************************************************************************/
 
-
+    
     protected Node[] nodes;
-
     protected Edge[][] edges;
-
     protected Integer[][] neighbourhood;
-
     protected final int nodeCount;
-
+    protected double mTilde;
 
     public VRP(Integer[] nodeValues, Integer[][] edgeValues, int n) {
 
@@ -41,10 +40,16 @@ public class VRP implements Graph {
 
         this.edges = new Edge[n][n];
         neighbourhood = new Integer[n][n - 1];
+        mTilde = 0;
 
         for (int i = 0; i < n; ++i) {
 
+
             nodes[i] = new Node(nodeValues[i]);
+
+            if (i > 0) {
+                mTilde += nodeValues[i];
+            }
 
             Comparator<Integer> comp = new Util(edges, i);
 
@@ -53,8 +58,7 @@ public class VRP implements Graph {
             for (j = 0; j < n; ++j) {
                 if (i == j) {
                     this.edges[i][j] = new Edge(0);
-                }
-                else {
+                } else {
                     this.edges[i][j] = new Edge(edgeValues[i][j]);
                     neighbourhood[i][k] = j;
                     k += 1;
@@ -64,28 +68,29 @@ public class VRP implements Graph {
         }
 
         nodeCount = n;
+        mTilde /= nodeCount;
     }
-
 
     public int getNodeCount() {
         return nodeCount;
     }
 
+    public double getMTilde() {
+        return mTilde;
+    }
 
     public Node getNode(int n) {
         return nodes[n];
     }
 
-
     public Edge getEdge(int i, int j) {
         return edges[i][j];
     }
 
-    
     public Integer[][] getNeighbourhood() {
         Integer[][] tmp = new Integer[nodeCount][nodeCount - 1];
         for (int i = 0; i < neighbourhood.length; ++i) {
-         tmp[i] = Arrays.copyOf(neighbourhood[i], neighbourhood[i].length);
+            tmp[i] = Arrays.copyOf(neighbourhood[i], neighbourhood[i].length);
         }
         return tmp;
     }
