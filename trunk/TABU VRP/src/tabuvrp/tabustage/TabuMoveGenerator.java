@@ -4,6 +4,7 @@ import java.util.Set;
 import java.util.HashSet;
 import tabuvrp.core.Graph;
 import tabuvrp.core.Solution;
+import tabuvrp.core.move.*;
 
 
 public class TabuMoveGenerator {
@@ -12,12 +13,17 @@ public class TabuMoveGenerator {
 //    protected final Graph graph;
     protected final Solution solution;
     protected final TabuIndex tabuIndex;
+    protected final TabuStageParams params;
+    protected final Move10Generator moveGen;
 
-    public TabuMoveGenerator(Graph graph, Solution solution, TabuIndex tabuIndex) {
+    public TabuMoveGenerator(Graph graph, Solution solution, TabuIndex tabuIndex,
+            TabuStageParams params) {
 //        this.graph = graph;
         genMat = graph.getNeighbourhood();
         this.solution = solution;
         this.tabuIndex = tabuIndex;
+        this.params = params;
+        moveGen = new Move10Generator(solution);
     }
 
     public Set<Integer> extract(Integer row, int count) {
@@ -47,5 +53,21 @@ public class TabuMoveGenerator {
         return i2 != 0 &&
                !tabuIndex.isTabu(i1, i2) &&
                !solution.inSamePath(i1, i2);
+    }
+
+    public Set<Move10> getMoves() {
+        HashSet<Move10> moves = new HashSet<Move10>();
+        for (Integer sourceNode : getRandomNodeIndexes(params.getQ())) {
+            for (Integer targetNode : extract(sourceNode, params.getP())) {
+                for (int pos = 0; pos < solution.getPathSizeByNodeIndex(targetNode); ++pos) {
+                    moves.add(moveGen.Move10(sourceNode, targetNode, pos));
+                }
+            }
+        }
+        return moves;
+    }
+
+    public void apply(Move10 move) {
+        moveGen.apply(move);
     }
 }
