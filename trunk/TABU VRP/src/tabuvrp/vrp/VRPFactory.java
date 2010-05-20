@@ -18,7 +18,7 @@ public class VRPFactory {
         double[] y = new double[nodeCount];
 
         /* supply */
-        demands[0] = Integer.valueOf(skipComments(r));
+        demands[0] = - Integer.valueOf(skipComments(r));
 
         int i;
         String line;

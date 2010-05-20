@@ -50,7 +50,7 @@ public class TabuStage extends Stage {
         }
 
         if (moveFound) {
-            System.err.println("move found");
+//            System.err.println("move found");
             generator.apply(bestMove);
             if (minF2 < f2ForSolution(bestSolution)) {
                 /* new best solution */
@@ -65,8 +65,8 @@ public class TabuStage extends Stage {
         }
         steps += 1;
         
-        System.err.println("end of step "+steps+" -> f2: " + f2ForSolution(solution));
-        System.err.println(solution);
+//        System.err.println("end of step "+steps+" -> f2: " + f2ForSolution(solution));
+//        System.err.println(solution);
         
         return steps <= params.getMaxSteps();
     }
@@ -82,5 +82,9 @@ public class TabuStage extends Stage {
 
     protected double objective(double cost, int demandBalance) {
         return cost + params.getAlpha() * ((demandBalance > 0)? demandBalance : 0);
+    }
+
+    public Solution getBestSolution() {
+        return bestSolution.deepCopy();
     }
 }
