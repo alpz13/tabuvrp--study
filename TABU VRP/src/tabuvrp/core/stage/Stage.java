@@ -66,6 +66,7 @@ public abstract class Stage {
     }
 
     public long getElaborationTime() {
+        // TODO: fix
         if (started && stopped) {
             return stopTime - startTime;
         }
