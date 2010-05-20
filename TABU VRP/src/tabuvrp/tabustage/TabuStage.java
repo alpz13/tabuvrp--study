@@ -80,7 +80,7 @@ public class TabuStage extends Stage {
                          solution.getDemandBalance() + move.getDeltaDemandBalance());
     }
 
-    protected double objective(int cost, int demandBalance) {
+    protected double objective(double cost, int demandBalance) {
         return cost + params.getAlpha() * ((demandBalance > 0)? demandBalance : 0);
     }
 }

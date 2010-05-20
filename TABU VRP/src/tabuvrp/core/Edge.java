@@ -3,9 +3,9 @@ package tabuvrp.core;
 
 public final class Edge {
 
-    private final int cost;
+    private final double cost;
 
-    public Edge(int cost) {
+    public Edge(double cost) {
         this.cost = cost;
     }
 
@@ -13,7 +13,7 @@ public final class Edge {
         this.cost = Integer.parseInt(s);
     }
 
-    public final int getCost() {
+    public final double getCost() {
         return cost;
     }
 

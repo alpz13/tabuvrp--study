@@ -1,6 +1,6 @@
 package tabuvrp;
 
-import tabuvrp.vrp.VRP;
+import tabuvrp.vrp.*;
 import tabuvrp.core.Solution;
 import tabuvrp.core.stage.Stage;
 import tabuvrp.tabustage.TabuStage;
@@ -12,18 +12,16 @@ public class Main {
     
     public static void main(String[] args) {
 
+        VRP vrp = null;
+
         /* GRAPH INIT */
-        VRP vrp = new VRP(
-                new Integer[]{-13, 1, 2, 3, 4, 5},
-                new Integer[][]{
-                    new Integer[]{ 0, 01, 02, 03, 04, 05},
-                    new Integer[]{10,  0, 12, 13, 14, 15},
-                    new Integer[]{20, 12,  0, 23, 24, 25},
-                    new Integer[]{30, 13, 23,  0, 34, 35},
-                    new Integer[]{40, 14, 24, 34,  0, 45},
-                    new Integer[]{50, 15, 25, 35, 45,  0},
-                },
-                6);
+        try {
+            vrp = VRPFactory.newVRPFromFile(args[0]);
+        }
+        catch (Exception exc) {
+            exc.printStackTrace();
+            System.exit(1);
+        }
         
 
         /* SOLUTION INIT */

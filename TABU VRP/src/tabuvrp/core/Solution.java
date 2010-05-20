@@ -1,6 +1,5 @@
 package tabuvrp.core;
 
-import tabuvrp.core.Graph;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -79,7 +78,7 @@ public class Solution {
         nodesToPaths.remove(nodeIndex);
     }
 
-    public int deltaCostForRemove(Integer nodeIndex) {
+    public double deltaCostForRemove(Integer nodeIndex) {
         return getPathByNodeIndex(nodeIndex).deltaCostForRemove(nodeIndex);
     }
 
@@ -93,7 +92,7 @@ public class Solution {
         nodesToPaths.put(nodeIndex, path);
     }
 
-    public int deltaCostForInsert(Integer targetNode, int position, Integer nodeIndex) {
+    public double deltaCostForInsert(Integer targetNode, int position, Integer nodeIndex) {
         return getPathByNodeIndex(targetNode).deltaCostForInsert(position, nodeIndex);
     }
 
@@ -101,8 +100,8 @@ public class Solution {
         return getPathByNodeIndex(targetNode).deltaDemandBalanceForInsert(nodeIndex);
     }
 
-    public int getCost() {
-        int cost = 0;
+    public double getCost() {
+        double cost = 0;
         for (Path path : paths) {
             cost += path.getCost();
         }

@@ -15,7 +15,7 @@ public final class Move10 extends Move {
     public Move10(Path sourcePath, Integer sourceNode,
                   Path targetPath, Integer targetNode,
                   int position,
-                  int deltaCost,
+                  double deltaCost,
                   int deltaDemandBalance) {
         super(deltaCost, deltaDemandBalance);
         this.sourcePath = sourcePath;
