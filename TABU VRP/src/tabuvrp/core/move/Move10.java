@@ -16,8 +16,8 @@ public final class Move10 extends Move {
                   Path targetPath, Integer targetNode,
                   int position,
                   double deltaCost,
-                  int deltaDemandBalance) {
-        super(deltaCost, deltaDemandBalance);
+                  int deltaInfIndex) {
+        super(deltaCost, deltaInfIndex);
         this.sourcePath = sourcePath;
         this.sourceNode = sourceNode;
         this.targetPath = targetPath;

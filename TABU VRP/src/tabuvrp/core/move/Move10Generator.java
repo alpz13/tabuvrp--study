@@ -23,14 +23,14 @@ public class Move10Generator {
         double deltaCost = solution.deltaCostForRemove(sourceNode)
                 + solution.deltaCostForInsert(targetNode, position, sourceNode);
 
-        int deltaDemandBalance = solution.deltaDemandBalanceForRemove(sourceNode)
-                + solution.deltaDemandBalanceForInsert(targetNode, sourceNode);
+        int deltaInfIndex = solution.deltaInfIndexForRemove(sourceNode)
+                + solution.deltaInfIndexForInsert(targetNode, sourceNode);
 
         Move10 move = new Move10(sourcePath, sourceNode,
                                  targetPath, targetNode,
                                  position,
                                  deltaCost,
-                                 deltaDemandBalance);
+                                 deltaInfIndex);
 
         return move;
     }

@@ -51,9 +51,6 @@ public class Solution {
     }
 
     public Path getPathByNodeIndex(Integer index) {
-        if (nodesToPaths.get(index) == null) {
-            System.out.println("as");
-        }
         return nodesToPaths.get(index);
     }
 
@@ -82,8 +79,13 @@ public class Solution {
         return getPathByNodeIndex(nodeIndex).deltaCostForRemove(nodeIndex);
     }
 
-    public int deltaDemandBalanceForRemove(Integer nodeIndex) {
-        return getPathByNodeIndex(nodeIndex).deltaDemandBalanceForRemove(nodeIndex);
+    public int deltaInfIndexForRemove(Integer nodeIndex) {
+        int dDemBal = getPathByNodeIndex(nodeIndex).deltaDemandBalanceForRemove(nodeIndex);
+        if (dDemBal <= 0) {
+            // no penalty
+            return 0;
+        }
+        return dDemBal;
     }
 
     public void insert(Integer targetNode, int position, Integer nodeIndex) {
@@ -96,8 +98,13 @@ public class Solution {
         return getPathByNodeIndex(targetNode).deltaCostForInsert(position, nodeIndex);
     }
 
-    public int deltaDemandBalanceForInsert(Integer targetNode, Integer nodeIndex) {
-        return getPathByNodeIndex(targetNode).deltaDemandBalanceForInsert(nodeIndex);
+    public int deltaInfIndexForInsert(Integer targetNode, Integer nodeIndex) {
+        int dDemBal = getPathByNodeIndex(targetNode).deltaDemandBalanceForInsert(nodeIndex);
+        if (dDemBal <= 0) {
+            // no penalty
+            return 0;
+        }
+        return dDemBal;
     }
 
     public double getCost() {
@@ -108,12 +115,15 @@ public class Solution {
         return cost;
     }
 
-    public int getDemandBalance() {
-        int demandBalance = 0;
+    public int getInfIndex() {
+        int infIndex = 0;
         for (Path path : paths) {
-            demandBalance += path.getDemandBalance();
+            int demBal = path.getDemandBalance();
+            if (demBal > 0) {
+                infIndex += demBal;
+            }
         }
-        return demandBalance;
+        return infIndex;
     }
     
     public boolean isFeasible() {
@@ -127,15 +137,14 @@ public class Solution {
 
     @Override
     public String toString() {
-        // TODO: use builder.
-        String s = "Solution:\n";
+        StringBuilder b = new StringBuilder("Solution\n");
         for (Path p : paths) {
-            s += "\t" + p + "\n";
+            b.append('\t').append(p).append('\n');
         }
-        s += "\n  Cost:" + getCost();
-        s += "\n  Demand Balance:" + getDemandBalance();
-        s += "\n  " + (isFeasible()? "Feasible\n" : "Not feasible\n");
-
-        return s;
+        b.append("cost: ").append(Math.round(getCost()));
+        b.append("\ninfeasibility index: ").append(getInfIndex());
+        b.append('\n').append(isFeasible()? "feasible" : "NOT feasible");
+        b.append('\n');
+        return b.toString();
     }
 }
