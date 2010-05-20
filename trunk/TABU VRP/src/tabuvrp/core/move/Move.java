@@ -4,19 +4,19 @@ package tabuvrp.core.move;
 public abstract class Move {
 
     private final double deltaCost;
-    private final int deltaDemandBalance;
+    private final int deltaInfIndex;
 
     public Move(double deltaCost,
-                int deltaDemandBalance) {
+                int deltaInfIndex) {
         this.deltaCost = deltaCost;
-        this.deltaDemandBalance = deltaDemandBalance;
+        this.deltaInfIndex = deltaInfIndex;
     }
     
     public final double getDeltaCost() {
         return deltaCost;
     }
 
-    public final int getDeltaDemandBalance() {
-        return deltaDemandBalance;
+    public final int getDeltaInfIndex() {
+        return deltaInfIndex;
     }
 }

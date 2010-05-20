@@ -11,7 +11,6 @@ import tabuvrp.core.move.*;
 public class TabuMoveGenerator {
 
     protected final Integer[][] genMat;
-//    protected final Graph graph;
     protected final Solution solution;
     protected final TabuIndex<Integer, Path> tabuIndex;
     protected final TabuStageParams params;
@@ -21,7 +20,6 @@ public class TabuMoveGenerator {
                              Solution solution,
                              TabuIndex<Integer, Path> tabuIndex,
                              TabuStageParams params) {
-//        this.graph = graph;
         genMat = graph.getNeighbourhood();
         this.solution = solution;
         this.tabuIndex = tabuIndex;

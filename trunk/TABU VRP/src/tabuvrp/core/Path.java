@@ -121,12 +121,12 @@ public class Path {
 
     @Override
     public String toString() {
-        // TODO: use builder.
-        String s = "Path: ";
+        StringBuilder b = new StringBuilder("Path 0 ");
         for (Integer i : steps) {
-            s += i + " ";
+            b.append(i).append(" ");
         }
-        s += "cost:" + cost + " demand:" + demandBalance;
-        return s;
+        b.append("0    cost: ").append(Math.round(cost));
+        b.append(" demand balance: ").append(demandBalance);
+        return b.toString();
     }
 }

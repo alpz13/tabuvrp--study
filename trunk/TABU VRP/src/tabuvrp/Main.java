@@ -30,9 +30,11 @@ public class Main {
         for(int i = 1; i < n; ++i) {
             sol.makePath(i);
         }
+        System.err.println(">> INIT\n" + sol);
 
 
         /* STAGE 0 */
+        System.err.println("\n\n>> STAGE 1\n\n");
         BasicTabuStageParams s0_params = new BasicTabuStageParams(sol,
                     1, 10,                                  // alpha, beta
                     Math.min(n, 5),                         // p
@@ -47,8 +49,11 @@ public class Main {
 
         s0.runStage();
 
+        System.err.println(s0.getBestSolution());
+
         
         /* STAGE 1 */
+        System.err.println("\n\n>> STAGE 2\n\n");
         BasicTabuStageParams s1_params = new BasicTabuStageParams(sol,
                     1, 10,
                     Math.min(n, 10),
@@ -63,7 +68,6 @@ public class Main {
 
         s1.runStage();
 
-        System.err.println("\nBEST SOLUTION:\n" + s1.getBestSolution());
-        
+        System.err.println(s1.getBestSolution());
     }
 }

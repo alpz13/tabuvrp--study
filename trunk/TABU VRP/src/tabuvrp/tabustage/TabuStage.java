@@ -28,8 +28,6 @@ public class TabuStage extends Stage {
         this.generator = new TabuMoveGenerator(problem, solution, tabuIndex, params);
         this.bestSolution = solution.deepCopy();
         steps = 0;
-        System.err.println("Start f2: " + f2ForSolution(bestSolution));
-        System.err.println(solution);
     }
 
     protected boolean doStep() {
@@ -50,12 +48,13 @@ public class TabuStage extends Stage {
         }
 
         if (moveFound) {
-//            System.err.println("move found");
             generator.apply(bestMove);
-            if (minF2 < f2ForSolution(bestSolution)) {
+            if (minF2 < f2ForSolution(bestSolution) &&
+                solution.isFeasible()) { // TODO: VA BENE??
                 /* new best solution */
                 bestSolution = solution.deepCopy();
                 System.err.println("new best solution -> f2: " + f2ForSolution(solution));
+                //System.err.println(solution);
             }
             tabuIndex.setTabu(bestMove.getSourceNode(),
                               bestMove.getTargetPath(),
@@ -65,23 +64,20 @@ public class TabuStage extends Stage {
         }
         steps += 1;
         
-//        System.err.println("end of step "+steps+" -> f2: " + f2ForSolution(solution));
-//        System.err.println(solution);
-        
         return steps <= params.getMaxSteps();
     }
 
     protected double f2ForSolution(Solution solution) {
-        return objective(solution.getCost(), solution.getDemandBalance());
+        return objective(solution.getCost(), solution.getInfIndex());
     }
 
     protected double f2ForMove(Move10 move) {
         return objective(solution.getCost() + move.getDeltaCost(),
-                         solution.getDemandBalance() + move.getDeltaDemandBalance());
+                         solution.getInfIndex() + move.getDeltaInfIndex());
     }
 
-    protected double objective(double cost, int demandBalance) {
-        return cost + params.getAlpha() * ((demandBalance > 0)? demandBalance : 0);
+    protected double objective(double cost, int infIndex) {
+        return cost + params.getAlpha() * infIndex;
     }
 
     public Solution getBestSolution() {

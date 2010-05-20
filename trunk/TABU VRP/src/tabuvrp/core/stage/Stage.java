@@ -7,10 +7,12 @@ public abstract class Stage {
 
     private HashSet<StageListener> listeners;
     private boolean stopRequired;
+    private boolean stopped;
 
     public Stage() {
         listeners = new HashSet<StageListener>();
         stopRequired = false;
+        stopped = false;
     }
 
     public void addStageListener(StageListener listener) {
@@ -27,10 +29,14 @@ public abstract class Stage {
     }
 
     public void runStage() {
+        if (stopped) {
+            return;
+        }
         notifyAll_StageStarted();
         while (!stopRequired && doStep()) {
             notifyAll_StepDone();
         }
+        stopped = true;
         notifyAll_StageStopped();
     }
 
