@@ -1,7 +1,5 @@
 package tabuvrp.core;
 
-import tabuvrp.core.Graph;
-import tabuvrp.core.Node;
 import java.util.ArrayList;
 
 
@@ -9,7 +7,7 @@ public class Path {
 
     protected final Graph graph;
     protected final ArrayList<Integer> steps;
-    protected int cost;
+    protected double cost;
     protected int demandBalance;
 
     public Path(Graph graph) {
@@ -24,7 +22,7 @@ public class Path {
 
     protected Path(Graph graph,
                    ArrayList<Integer> steps,
-                   int cost,
+                   double cost,
                    int demandBalance) {
         this.graph = graph;
         this.steps = steps;
@@ -50,7 +48,7 @@ public class Path {
         steps.add(position, nodeIndex);
     }
 
-    public int deltaCostForInsert(int position, Integer nodeIndex) {
+    public double deltaCostForInsert(int position, Integer nodeIndex) {
         if (steps.isEmpty()) {
             return    graph.getEdge(0, nodeIndex).getCost()
                     + graph.getEdge(nodeIndex, 0).getCost();
@@ -74,7 +72,7 @@ public class Path {
         steps.remove(position);
     }
 
-    public int deltaCostForRemove(Integer nodeIndex) {
+    public double deltaCostForRemove(Integer nodeIndex) {
         int position = getPositionByNodeIndex(nodeIndex);
         if (steps.size() <= 1) {
             return -cost;
@@ -93,7 +91,7 @@ public class Path {
         return node.getDemand();
     }
 
-    public int getCost() {
+    public double getCost() {
         return cost;
     }
 

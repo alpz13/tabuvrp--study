@@ -20,7 +20,7 @@ public class Move10Generator {
         Path sourcePath = solution.getPathByNodeIndex(sourceNode);
         Path targetPath = solution.getPathByNodeIndex(targetNode);
 
-        int deltaCost = solution.deltaCostForRemove(sourceNode)
+        double deltaCost = solution.deltaCostForRemove(sourceNode)
                 + solution.deltaCostForInsert(targetNode, position, sourceNode);
 
         int deltaDemandBalance = solution.deltaDemandBalanceForRemove(sourceNode)
