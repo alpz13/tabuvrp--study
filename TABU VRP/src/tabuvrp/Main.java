@@ -22,46 +22,48 @@ public class Main {
             exc.printStackTrace();
             System.exit(1);
         }
-        
+        int n = vrp.getNodeCount();
+        double mt = vrp.getMTilde();
 
         /* SOLUTION INIT */
         Solution sol = new Solution(vrp);
-        for(int i = 1; i < vrp.getNodeCount(); ++i) {
+        for(int i = 1; i < n; ++i) {
             sol.makePath(i);
         }
 
 
         /* STAGE 0 */
         BasicTabuStageParams s0_params = new BasicTabuStageParams(sol,
-                    1, 10,  // alpha, beta
-                    5,      // p
-                    2,      // q
-                    5, 10,  // min theta, max theta
+                    1, 10,                                  // alpha, beta
+                    Math.min(n, 5),                         // p
+                    (int) Math.min(n, Math.round(5 * mt)),  // q
+                    5, 10,                                  // min theta, max theta
                     50 * vrp.getNodeCount());
 
-        Stage s0 = new TabuStage(
+        TabuStage s0 = new TabuStage(
                 vrp,
                 s0_params,
                 sol);
 
+        s0.runStage();
 
+        
         /* STAGE 1 */
         BasicTabuStageParams s1_params = new BasicTabuStageParams(sol,
                     1, 10,
-                    6,
-                    6,
+                    Math.min(n, 10),
+                    n,
                     5, 10,
                     100);
 
-        Stage s1 = new TabuStage(
+        TabuStage s1 = new TabuStage(
                 vrp,
                 s1_params,
-                sol);
+                s0.getBestSolution());
 
-
-        /* RUN */
-        s0.runStage();
         s1.runStage();
+
+        System.err.println("\nBEST SOLUTION:\n" + s1.getBestSolution());
         
     }
 }
