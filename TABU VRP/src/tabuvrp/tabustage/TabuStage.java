@@ -50,11 +50,11 @@ public class TabuStage extends Stage {
         if (moveFound) {
             generator.apply(bestMove);
             if (minF2 < f2ForSolution(bestSolution) &&
-                solution.isFeasible()) { // TODO: VA BENE??
+                solution.isFeasible()) {
                 /* new best solution */
                 bestSolution = solution.deepCopy();
-                System.err.println("new best solution -> f2: " + f2ForSolution(solution));
-                //System.err.println(solution);
+//                System.err.println("new best solution -> f2: " + f2ForSolution(solution));
+//                System.err.println(solution);
             }
             tabuIndex.setTabu(bestMove.getSourceNode(),
                               bestMove.getTargetPath(),

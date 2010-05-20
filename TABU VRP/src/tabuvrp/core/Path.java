@@ -78,8 +78,8 @@ public class Path {
             return -cost;
         }
         Integer start = (position == 0) ? 0 : steps.get(position - 1);
-        Integer mid = steps.get(position);
-        Integer end = (position == steps.size() - 1) ? 0 : steps.get(position);
+        Integer mid = nodeIndex;
+        Integer end = (position == steps.size() - 1) ? 0 : steps.get(position + 1);
         return    graph.getEdge(start, end).getCost()
                 - graph.getEdge(start, mid).getCost()
                 - graph.getEdge(mid, end).getCost();
@@ -87,7 +87,7 @@ public class Path {
 
     public int deltaDemandBalanceForRemove(Integer nodeIndex) {
         int position = getPositionByNodeIndex(nodeIndex);
-        Node node = graph.getNode(steps.get(position));
+        Node node = graph.getNode(nodeIndex);
         return node.getDemand();
     }
 
@@ -125,7 +125,7 @@ public class Path {
         for (Integer i : steps) {
             b.append(i).append(" ");
         }
-        b.append("0    cost: ").append(Math.round(cost));
+        b.append("0    cost: ~").append(Math.round(cost));
         b.append(" demand balance: ").append(demandBalance);
         return b.toString();
     }

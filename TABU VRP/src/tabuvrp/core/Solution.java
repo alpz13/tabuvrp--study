@@ -141,7 +141,7 @@ public class Solution {
         for (Path p : paths) {
             b.append('\t').append(p).append('\n');
         }
-        b.append("cost: ").append(Math.round(getCost()));
+        b.append("cost: ~").append(Math.round(getCost()));
         b.append("\ninfeasibility index: ").append(getInfIndex());
         b.append('\n').append(isFeasible()? "feasible" : "NOT feasible");
         b.append('\n');

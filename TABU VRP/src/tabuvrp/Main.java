@@ -1,5 +1,6 @@
 package tabuvrp;
 
+import java.util.concurrent.TimeUnit;
 import tabuvrp.vrp.*;
 import tabuvrp.core.Solution;
 import tabuvrp.core.stage.Stage;
@@ -50,8 +51,8 @@ public class Main {
         s0.runStage();
 
         System.err.println(s0.getBestSolution());
+        System.err.println("elapsed time: " + s0.getElaborationTime() / 1E9 + "s");
 
-        
         /* STAGE 1 */
         System.err.println("\n\n>> STAGE 2\n\n");
         BasicTabuStageParams s1_params = new BasicTabuStageParams(sol,
@@ -69,5 +70,6 @@ public class Main {
         s1.runStage();
 
         System.err.println(s1.getBestSolution());
+        System.err.println("elapsed time: " + s1.getElaborationTime() / 1E9 + "s");
     }
 }
