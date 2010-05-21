@@ -37,6 +37,16 @@ public class Path {
                         demandBalance);
     }
 
+    public Integer[] getPathView() {
+        Integer[] view = new Integer[steps.size() + 2];
+        view[0] = 0;
+        int i;
+        for (i = 0; i < steps.size(); ++i) {
+            view[i + 1] = Integer.valueOf(steps.get(i));
+        }
+        view[i + 1] = 0;
+        return view;
+    }
 
     public boolean isEmpty() {
         return steps.isEmpty();

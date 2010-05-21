@@ -12,4 +12,12 @@ public interface Graph {
     public int getNodeCount();
 
     public double getMTilde();
+
+    public double getMinX();
+
+    public double getMaxX();
+
+    public double getMinY();
+    
+    public double getMaxY();
 }
