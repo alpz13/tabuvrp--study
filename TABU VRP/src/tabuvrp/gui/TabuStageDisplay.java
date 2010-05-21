@@ -9,7 +9,20 @@ public class TabuStageDisplay extends javax.swing.JPanel implements TabuStageLis
 
     /** Creates new form TabuStageDisplay */
     public TabuStageDisplay() {
+        improvements = 0;
         initComponents();
+        clear();
+    }
+
+    public void clear() {
+        stepsField.setText("-");
+        usefulField.setText("-");
+        feasibleField.setText("-");
+        infeasibleField.setText("-");
+        elapsedField.setText("-");
+        solutionImprovementsField.setText("-");
+        initialCostField.setText("-");
+        finalCostField.setText("-");
     }
 
     /** This method is called from within the constructor to
@@ -44,7 +57,7 @@ public class TabuStageDisplay extends javax.swing.JPanel implements TabuStageLis
 
         jPanel1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
 
-        stepsLabel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        stepsLabel.setFont(new java.awt.Font("Dialog", 1, 14));
         stepsLabel.setText("Steps");
 
         stepsField.setEditable(false);
@@ -235,25 +248,33 @@ public class TabuStageDisplay extends javax.swing.JPanel implements TabuStageLis
     private javax.swing.JTextField usefulField;
     private javax.swing.JLabel usefulLabel;
     // End of variables declaration//GEN-END:variables
-
+    private int improvements;
 
     public void stageStarted(Stage stage) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        initialCostField.setText(String.valueOf(stage.getBestSolution().getCost()));
     }
 
     public void stepDone(Stage stage) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        stepsField.setText(String.valueOf(stage.getSteps()));
+        elapsedField.setText(String.valueOf(stage.getElaborationTime() * 10E-9));
     }
 
     public void newBestSolution(Stage stage) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        improvements += 1;
+        solutionImprovementsField.setText(String.valueOf(improvements));
     }
 
     public void stageStopped(Stage stage) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        finalCostField.setText(String.valueOf(stage.getBestSolution().getCost()));
     }
 
     public void newUsefulStep(TabuStage stage, boolean feasible) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        usefulField.setText(String.valueOf(stage.getUsefulSteps()));
+        if (feasible) {
+            feasibleField.setText(String.valueOf(stage.getFeasSteps()));
+        }
+        else {
+            infeasibleField.setText(String.valueOf(stage.getInfeasSteps()));
+        }
     }
 }

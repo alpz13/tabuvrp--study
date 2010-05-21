@@ -77,7 +77,7 @@ public class TabuStage extends Stage {
             }
             else {
                 infeasibleSteps += 1;
-                notifyAll_NewUsefulStep(true);
+                notifyAll_NewUsefulStep(false);
             }
             tabuIndex.step();
             params.step();
@@ -111,6 +111,10 @@ public class TabuStage extends Stage {
 
     public int getInfeasSteps() {
         return infeasibleSteps;
+    }
+
+    public int getUsefulSteps() {
+        return feasibleSteps + infeasibleSteps;
     }
 
 }

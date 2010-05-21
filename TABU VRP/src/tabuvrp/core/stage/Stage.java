@@ -74,7 +74,7 @@ public abstract class Stage {
 
     public long getElaborationTime() {
         if (state == State.RUNNING) {
-            return startTime - System.nanoTime();
+            return System.nanoTime() - startTime;
         }
         if (state == State.STOPPED) {
                 return stopTime - startTime;
