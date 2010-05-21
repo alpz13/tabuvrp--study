@@ -1,76 +1,89 @@
 package tabuvrp.core.stage;
 
 import java.util.HashSet;
+import tabuvrp.core.Solution;
 
 
 public abstract class Stage {
 
+    enum State {
+        IDLE,
+        RUNNING,
+        STOPPED;
+    }
+
     private HashSet<StageListener> listeners;
-    private boolean stopRequired;
-    private boolean started;
-    private boolean stopped;
+    private State state;
+    private boolean stopRequested;
     private long startTime;
     private long stopTime;
+    private long steps;
+    protected Solution bestSolution;
 
     public Stage() {
         listeners = new HashSet<StageListener>();
-        stopRequired = false;
-        started = false;
-        stopped = false;
+        stopRequested = false;
+        state = State.IDLE;
+        steps = 0;
     }
 
     public void addStageListener(StageListener listener) {
         if (listener == null) {
-            throw new IllegalArgumentException("cannot add null as listener");
+            throw new IllegalArgumentException("cannot add 'null' as listener");
         }
         listeners.add(listener);
     }
 
     public void remStageListener(StageListener listener) {
-        if (listener != null) {
-            listeners.remove(listener);
+        if (listener == null) {
+            throw new IllegalArgumentException("cannot remove 'null' listener");
         }
+        listeners.remove(listener);
     }
 
     public void runStage() {
-        if (started) {
+        if (state != State.IDLE) {
             return;
         }
-        started = true;
         startTime = System.nanoTime();
+        state = State.RUNNING;
         notifyAll_StageStarted();
-        while (!stopRequired) {
-            if (doStep()) {
-                notifyAll_StepDone();
-            }
-            else {
-                notifyAll_StepDone();
-                break;
-            }
+        while (!stopRequested) {
+            stopRequested = !doStep();
+            steps += 1;
+            notifyAll_StepDone();
         }
-        stopped = true;
         stopTime = System.nanoTime();
+        state = State.STOPPED;
         notifyAll_StageStopped();
     }
 
     public void stopStage() {
-        stopRequired = true;
+        if (state == State.RUNNING) {
+            stopRequested = true;
+        }
     }
 
     public long getStartTime() {
-        return started? startTime : 0;
+        return (state != State.IDLE)? startTime : 0;
     }
 
     public long getStopTime() {
-        return stopped? stopTime : 0;
+        return (state == State.STOPPED)? stopTime : 0;
     }
 
     public long getElaborationTime() {
-        // TODO: fix
-        if (started && stopped) {
-            return stopTime - startTime;
+        if (state == State.RUNNING) {
+            return startTime - System.nanoTime();
         }
-        else return 0;
+        if (state == State.STOPPED) {
+                return stopTime - startTime;
+        }
+        return 0;
+    }
+
+    public long getSteps() {
+        return steps;
     }
 
     protected void notifyAll_StageStarted() {
@@ -91,6 +104,23 @@ public abstract class Stage {
         }
     }
 
+    protected void notifyAll_NewBestSolution() {
+        for (StageListener listener : listeners) {
+            listener.newBestSolution();
+        }
+    }
+
+    protected void setBestSolution(Solution newBestSolution) {
+        if (newBestSolution == null) {
+            throw new IllegalArgumentException("'solution' null");
+        }
+        bestSolution = newBestSolution.deepCopy();
+    }
+
+    public Solution getBestSolution() {
+        return bestSolution.deepCopy();
+    }
+    
     protected abstract boolean doStep();
 
 }
