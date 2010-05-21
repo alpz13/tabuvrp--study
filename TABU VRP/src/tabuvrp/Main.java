@@ -1,9 +1,7 @@
 package tabuvrp;
 
-import java.util.concurrent.TimeUnit;
 import tabuvrp.vrp.*;
 import tabuvrp.core.Solution;
-import tabuvrp.core.stage.Stage;
 import tabuvrp.tabustage.TabuStage;
 import tabuvrp.tabustage.BasicTabuStageParams;
 
@@ -52,6 +50,11 @@ public class Main {
 
         System.err.println(s0.getBestSolution());
         System.err.println("elapsed time: " + s0.getElaborationTime() / 1E9 + "s");
+        System.err.println("Total steps: " + s0.getSteps());
+        System.err.println("Useful steps: " + (long) (s0.getFeasSteps() + s0.getInfeasSteps()));
+        System.err.println("Steps spent into feasible solutions: " + s0.getFeasSteps());
+        System.err.println("Steps spent into not feasible solutions: " + s0.getInfeasSteps());
+
 
         /* STAGE 1 */
         System.err.println("\n\n>> STAGE 2\n\n");
@@ -71,5 +74,9 @@ public class Main {
 
         System.err.println(s1.getBestSolution());
         System.err.println("elapsed time: " + s1.getElaborationTime() / 1E9 + "s");
+        System.err.println("Total steps: " + s1.getSteps());
+        System.err.println("Useful steps: " + (long)(s1.getFeasSteps() + s1.getInfeasSteps()));
+        System.err.println("Steps spent into feasible solutions: " + s1.getFeasSteps());
+        System.err.println("Steps spent into not feasible solutions: " + s1.getInfeasSteps());
     }
 }

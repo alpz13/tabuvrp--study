@@ -15,8 +15,9 @@ public class TabuStage extends Stage {
     protected final TabuIndex<Integer, Path> tabuIndex;
     protected final Solution solution;
     protected final TabuMoveGenerator generator;
-    protected Solution bestSolution;
     protected int steps;
+    protected int feasSteps;
+    protected int infeasSteps;
 
     public TabuStage(Graph problem,
                      TabuStageParams params,
@@ -26,8 +27,10 @@ public class TabuStage extends Stage {
         this.params = params;
         this.tabuIndex = new TabuIndex<Integer, Path>(params.getMaxTheta());
         this.generator = new TabuMoveGenerator(problem, solution, tabuIndex, params);
-        this.bestSolution = solution.deepCopy();
+        setBestSolution(solution);
         steps = 0;
+        feasSteps = 0;
+        infeasSteps = 0;
     }
 
     protected boolean doStep() {
@@ -49,22 +52,25 @@ public class TabuStage extends Stage {
 
         if (moveFound) {
             generator.apply(bestMove);
-            if (minF2 < f2ForSolution(bestSolution) &&
-                solution.isFeasible()) {
-                /* new best solution */
-                bestSolution = solution.deepCopy();
-//                System.err.println("new best solution -> f2: " + f2ForSolution(solution));
-//                System.err.println(solution);
-            }
             tabuIndex.setTabu(bestMove.getSourceNode(),
                               bestMove.getTargetPath(),
                               params.getTheta());
+            if (solution.isFeasible()) {
+                feasSteps += 1;
+                if (minF2 < f2ForSolution(bestSolution)) {
+                    /* new best solution */
+                    setBestSolution(solution);
+                }
+            }
+            else {
+                infeasSteps += 1;
+            }
             tabuIndex.step();
             params.step();
         }
         steps += 1;
         
-        return steps <= params.getMaxSteps();
+        return steps < params.getMaxSteps();
     }
 
     protected double f2ForSolution(Solution solution) {
@@ -80,7 +86,12 @@ public class TabuStage extends Stage {
         return cost + params.getAlpha() * infIndex;
     }
 
-    public Solution getBestSolution() {
-        return bestSolution.deepCopy();
+    public int getFeasSteps() {
+        return feasSteps;
     }
+
+    public int getInfeasSteps() {
+        return infeasSteps;
+    }
+
 }
