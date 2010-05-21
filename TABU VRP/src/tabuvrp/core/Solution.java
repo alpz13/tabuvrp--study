@@ -41,6 +41,14 @@ public class Solution {
                             newNodesToPaths);
     }
 
+    public Integer[][] getSolView() {
+        Integer[][] v = new Integer[paths.size()][];
+        for (int i = 0; i < paths.size(); ++i) {
+            v[i] = paths.get(i).getPathView();
+        }
+        return v;
+    }
+
     public int getPathSizeByNodeIndex(Integer nodeIndex) {
         return getPathByNodeIndex(nodeIndex).getStepCount();
     }

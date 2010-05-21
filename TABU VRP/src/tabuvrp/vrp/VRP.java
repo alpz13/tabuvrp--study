@@ -32,6 +32,8 @@ public class VRP implements Graph {
     protected Edge[][] edges;
     protected Integer[][] neighbourhood;
     protected final int nodeCount;
+    protected final double minX, maxX;
+    protected final double minY, maxY;
     protected double mTilde;
 
     public VRP(Integer[] nodeValues, double[] x, double[] y) {
@@ -47,13 +49,26 @@ public class VRP implements Graph {
         neighbourhood = new Integer[n][n - 1];
         mTilde = 0;
 
+        double minX = Double.MAX_VALUE;
+        double maxX = Double.MIN_VALUE;
+        double minY = Double.MAX_VALUE;
+        double maxY = Double.MIN_VALUE;
+
         for (int i = 0; i < n; ++i) {
             nodes[i] = new Node(x[i], y[i], nodeValues[i]);
             if (i > 0) {
                 mTilde += nodeValues[i];
             }
+            if (x[i] < minX) minX = x[i];
+            if (x[i] > maxX) maxX = x[i];
+            if (y[i] < minY) minY = y[i];
+            if (y[i] > maxY) maxY = y[i];
         }
         mTilde /= n;
+        this.minX = minX;
+        this.maxX = maxX;
+        this.minY = minY;
+        this.maxY = maxY;
 
         for (int i = 0; i < n; ++i) {
             Comparator<Integer> comp = new Util(edges, i);
@@ -88,6 +103,22 @@ public class VRP implements Graph {
 
     public Edge getEdge(int i, int j) {
         return edges[i][j];
+    }
+
+    public double getMinX() {
+        return minX;
+    }
+
+    public double getMaxX() {
+        return maxX;
+    }
+
+    public double getMinY() {
+        return minY;
+    }
+
+    public double getMaxY() {
+        return maxY;
     }
 
     public Integer[][] getNeighbourhood() {
