@@ -2,6 +2,7 @@ package tabuvrp.tabustage;
 
 import tabuvrp.core.Graph;
 import java.util.Set;
+import java.util.HashSet;
 import tabuvrp.core.Path;
 import tabuvrp.core.Solution;
 import tabuvrp.core.stage.Stage;
@@ -10,27 +11,39 @@ import tabuvrp.core.move.Move10;
 
 public class TabuStage extends Stage {
 
+    protected final HashSet<TabuStageListener> listeners;
     protected final Graph graph;
     protected final TabuStageParams params;
     protected final TabuIndex<Integer, Path> tabuIndex;
     protected final Solution solution;
     protected final TabuMoveGenerator generator;
     protected int steps;
-    protected int feasSteps;
-    protected int infeasSteps;
+    protected int feasibleSteps;
+    protected int infeasibleSteps;
 
     public TabuStage(Graph problem,
                      TabuStageParams params,
                      Solution solution) {
+        this.listeners = new HashSet<TabuStageListener>();
         this.graph = problem;
         this.solution = solution;
         this.params = params;
-        this.tabuIndex = new TabuIndex<Integer, Path>(params.getMaxTheta());
+        this.tabuIndex = new TabuIndex<Integer, Path>(params.MAX_THETA);
         this.generator = new TabuMoveGenerator(problem, solution, tabuIndex, params);
         setBestSolution(solution);
         steps = 0;
-        feasSteps = 0;
-        infeasSteps = 0;
+        feasibleSteps = 0;
+        infeasibleSteps = 0;
+    }
+
+    public void addTabuStageListener(TabuStageListener listener) {
+        addStageListener(listener);
+        listeners.add(listener);
+    }
+
+    public void remTabuStageListener(TabuStageListener listener) {
+        remStageListener(listener);
+        listeners.remove(listener);
     }
 
     protected boolean doStep() {
@@ -49,28 +62,34 @@ public class TabuStage extends Stage {
                 moveFound = true;
             }
         }
-
         if (moveFound) {
             generator.apply(bestMove);
             tabuIndex.setTabu(bestMove.getSourceNode(),
                               bestMove.getTargetPath(),
                               params.getTheta());
             if (solution.isFeasible()) {
-                feasSteps += 1;
+                feasibleSteps += 1;
+                notifyAll_NewUsefulStep(true);
                 if (minF2 < f2ForSolution(bestSolution)) {
                     /* new best solution */
                     setBestSolution(solution);
                 }
             }
             else {
-                infeasSteps += 1;
+                infeasibleSteps += 1;
+                notifyAll_NewUsefulStep(true);
             }
             tabuIndex.step();
             params.step();
         }
         steps += 1;
-        
-        return steps < params.getMaxSteps();
+        return steps < params.MAX_STEPS;
+    }
+
+    private void notifyAll_NewUsefulStep(boolean feasible) {
+        for (TabuStageListener listener : listeners) {
+            listener.newUsefulStep(this, feasible);
+        }
     }
 
     protected double f2ForSolution(Solution solution) {
@@ -87,11 +106,11 @@ public class TabuStage extends Stage {
     }
 
     public int getFeasSteps() {
-        return feasSteps;
+        return feasibleSteps;
     }
 
     public int getInfeasSteps() {
-        return infeasSteps;
+        return infeasibleSteps;
     }
 
 }

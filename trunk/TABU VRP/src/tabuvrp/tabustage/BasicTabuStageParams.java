@@ -3,16 +3,13 @@ package tabuvrp.tabustage;
 import tabuvrp.core.Solution;
 
 
-public final class BasicTabuStageParams implements TabuStageParams {
+public final class BasicTabuStageParams extends TabuStageParams {
 
     protected final Solution solution;
     protected double alpha;
     protected final int BETA;
     protected final int P;
     protected final int Q;
-    protected final int MIN_THETA;
-    protected final int MAX_THETA;
-    protected final int MAX_STEPS;
     protected long noFeasTransStreak;
     protected boolean feasible;
 
@@ -24,6 +21,7 @@ public final class BasicTabuStageParams implements TabuStageParams {
             int minTheta,
             int maxTheta,
             int maxSteps) {
+        super(maxSteps, minTheta, maxTheta);
         if (solution == null) {
             throw new IllegalArgumentException("'solution' is null");
         }
@@ -44,19 +42,9 @@ public final class BasicTabuStageParams implements TabuStageParams {
             throw new IllegalArgumentException("'q' <= 0");
         }
         Q = q;
-        if (   minTheta < 0
-            || maxTheta < 0) {
-            throw new IllegalArgumentException("'theta' < 0");
-        }
-        if (minTheta > maxTheta) {
-            throw new IllegalArgumentException("'min theta' > 'max theta'");
-        }
-        MIN_THETA = minTheta;
-        MAX_THETA = maxTheta;
         if (maxSteps <= 0) {
             throw new IllegalArgumentException("'max steps' <= 0");
         }
-        MAX_STEPS = maxSteps;
         noFeasTransStreak = 0;
         feasible = solution.isFeasible();
     }
@@ -88,17 +76,5 @@ public final class BasicTabuStageParams implements TabuStageParams {
 
     public final int getTheta() {
         return (int) Math.round(Math.random() * (MAX_THETA - MIN_THETA) + MIN_THETA);
-    }
-
-    public final int getMinTheta() {
-        return MIN_THETA;
-    }
-    
-    public final int getMaxTheta() {
-        return MAX_THETA;
-    }
-
-    public final int getMaxSteps() {
-        return MAX_STEPS;
     }
 }

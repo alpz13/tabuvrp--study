@@ -65,11 +65,11 @@ public abstract class Stage {
     }
 
     public long getStartTime() {
-        return (state != State.IDLE)? startTime : 0;
+        return (state != State.IDLE)? startTime : -1;
     }
 
     public long getStopTime() {
-        return (state == State.STOPPED)? stopTime : 0;
+        return (state == State.STOPPED)? stopTime : -1;
     }
 
     public long getElaborationTime() {
@@ -79,34 +79,34 @@ public abstract class Stage {
         if (state == State.STOPPED) {
                 return stopTime - startTime;
         }
-        return 0;
+        return -1;
     }
 
     public long getSteps() {
         return steps;
     }
 
-    protected void notifyAll_StageStarted() {
+    private void notifyAll_StageStarted() {
         for (StageListener listener : listeners) {
             listener.stageStarted(this);
         }
     }
 
-    protected void notifyAll_StepDone() {
+    private void notifyAll_StepDone() {
         for (StageListener listener : listeners) {
             listener.stepDone(this);
         }
     }
 
-    protected void notifyAll_StageStopped() {
+    private void notifyAll_StageStopped() {
         for (StageListener listener : listeners) {
             listener.stageStopped(this);
         }
     }
 
-    protected void notifyAll_NewBestSolution() {
+    private void notifyAll_NewBestSolution() {
         for (StageListener listener : listeners) {
-            listener.newBestSolution();
+            listener.newBestSolution(this);
         }
     }
 
@@ -115,6 +115,7 @@ public abstract class Stage {
             throw new IllegalArgumentException("'solution' null");
         }
         bestSolution = newBestSolution.deepCopy();
+        notifyAll_NewBestSolution();
     }
 
     public Solution getBestSolution() {
