@@ -37,8 +37,16 @@ public class TabuVRP extends javax.swing.JFrame implements StageListener {
         runButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Tabu Search VRP");
+        setAlwaysOnTop(true);
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        setResizable(false);
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Tabu Stages"));
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED), "Tabu Stages"));
+
+        tabuStageDisplay1.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.LOWERED), "Stage 1"));
+
+        tabuStageDisplay2.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.LOWERED), "Stage 2"));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -52,11 +60,8 @@ public class TabuVRP extends javax.swing.JFrame implements StageListener {
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(tabuStageDisplay2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tabuStageDisplay1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+            .addComponent(tabuStageDisplay2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(tabuStageDisplay1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         runButton.setText("Run");
@@ -70,11 +75,11 @@ public class TabuVRP extends javax.swing.JFrame implements StageListener {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(runButton, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(runButton))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -82,7 +87,7 @@ public class TabuVRP extends javax.swing.JFrame implements StageListener {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(30, 30, 30)
                 .addComponent(runButton)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -138,6 +143,7 @@ public class TabuVRP extends javax.swing.JFrame implements StageListener {
         }
         else if (stage == s1) {
             initS0();
+            System.gc();
             runButton.setEnabled(true);
         }
     }
@@ -150,7 +156,7 @@ public class TabuVRP extends javax.swing.JFrame implements StageListener {
         }
         /* STAGE 0 */
         s0params = new BasicTabuStageParams(sol,
-                    0.3, 10,                                // alpha, beta
+                    1, 10,                                  // alpha, beta
                     Math.min(n, 5),                         // p
                     (int) Math.min(n, Math.round(5 * mt)),  // q
                     5, 10,                                  // min theta, max theta
@@ -164,13 +170,14 @@ public class TabuVRP extends javax.swing.JFrame implements StageListener {
 
     private void initS1() {
         /* STAGE 1 */
+        sol = s0.getBestSolution();
         s1params = new BasicTabuStageParams(sol,
-                    1, 10,
+                    0.5, 10,
                     Math.min(n, 10),
                     n,
                     5, 10,
                     100);
-        s1 = new TabuStage(graph, s1params, s0.getBestSolution());
+        s1 = new TabuStage(graph, s1params, sol);
         s1.addTabuStageListener(tabuStageDisplay2);
         s1.addStageListener(this);
     }

@@ -9,12 +9,12 @@ public class TabuStageDisplay extends javax.swing.JPanel implements TabuStageLis
 
     /** Creates new form TabuStageDisplay */
     public TabuStageDisplay() {
-        improvements = 0;
         initComponents();
         clear();
     }
 
     public void clear() {
+        improvements = 0;
         stepsField.setText("-");
         usefulField.setText("-");
         feasibleField.setText("-");
@@ -55,7 +55,7 @@ public class TabuStageDisplay extends javax.swing.JPanel implements TabuStageLis
 
         setMaximumSize(new java.awt.Dimension(385, 322));
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
+        jPanel1.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
         stepsLabel.setFont(new java.awt.Font("Dialog", 1, 14));
         stepsLabel.setText("Steps");
@@ -95,7 +95,7 @@ public class TabuStageDisplay extends javax.swing.JPanel implements TabuStageLis
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(189, Short.MAX_VALUE)
+                .addContainerGap(187, Short.MAX_VALUE)
                 .addComponent(elapsedLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(elapsedField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -119,7 +119,7 @@ public class TabuStageDisplay extends javax.swing.JPanel implements TabuStageLis
                             .addComponent(feasibleField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(usefulField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(stepsField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(170, Short.MAX_VALUE))
+                .addContainerGap(168, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -147,7 +147,7 @@ public class TabuStageDisplay extends javax.swing.JPanel implements TabuStageLis
                 .addContainerGap())
         );
 
-        jPanel2.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jPanel2.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
         initialCostLabel.setText("Initial Cost");
 
@@ -176,9 +176,9 @@ public class TabuStageDisplay extends javax.swing.JPanel implements TabuStageLis
                 .addComponent(solutionImprovementsLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(solutionImprovementsField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(123, Short.MAX_VALUE))
+                .addContainerGap(121, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(194, Short.MAX_VALUE)
+                .addContainerGap(192, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(initialCostLabel)
                     .addComponent(finalCostLabel))
@@ -256,7 +256,7 @@ public class TabuStageDisplay extends javax.swing.JPanel implements TabuStageLis
 
     public void stepDone(Stage stage) {
         stepsField.setText(String.valueOf(stage.getSteps()));
-        elapsedField.setText(String.valueOf(stage.getElaborationTime() * 10E-9));
+        elapsedField.setText(String.valueOf(stage.getElaborationTime() * 10E-10));
     }
 
     public void newBestSolution(Stage stage) {
