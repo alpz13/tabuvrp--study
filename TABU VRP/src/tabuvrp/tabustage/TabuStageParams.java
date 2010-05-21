@@ -1,21 +1,37 @@
 package tabuvrp.tabustage;
 
 
-public interface TabuStageParams {
+public abstract class TabuStageParams {
 
-    public void step();
+    public final int MAX_STEPS;
+    public final int MIN_THETA;
+    public final int MAX_THETA;
 
-    public double getAlpha();
+    public TabuStageParams(int maxSteps,
+                           int minTheta,
+                           int maxTheta) {
+        if (maxSteps <= 0) {
+            throw new IllegalArgumentException("'max steps' <= 0");
+        }
+        MAX_STEPS = maxSteps;
+        if (   minTheta < 0
+            || maxTheta < 0) {
+            throw new IllegalArgumentException("'theta' < 0");
+        }
+        if (minTheta > maxTheta) {
+            throw new IllegalArgumentException("'min theta' > 'max theta'");
+        }
+        MIN_THETA = minTheta;
+        MAX_THETA = maxTheta;
+    }
 
-    public int getP();
+    public abstract void step();
 
-    public int getQ();
+    public abstract double getAlpha();
 
-    public int getMinTheta();
+    public abstract int getP();
 
-    public int getMaxTheta();
+    public abstract int getQ();
     
-    public int getTheta();
-
-    public int getMaxSteps();
+    public abstract int getTheta();
 }

@@ -7,7 +7,7 @@ public interface StageListener {
 
     public void stepDone(Stage stage);
 
-    public void newBestSolution();
+    public void newBestSolution(Stage stage);
     
     public void stageStopped(Stage stage);
 
