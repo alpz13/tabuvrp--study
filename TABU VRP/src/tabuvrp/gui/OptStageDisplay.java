@@ -9,6 +9,7 @@ public class OptStageDisplay extends javax.swing.JPanel implements StageListener
     /** Creates new form OptStageDisplay */
     public OptStageDisplay() {
         initComponents();
+        clear();
     }
 
     public void clear() {

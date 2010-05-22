@@ -51,7 +51,7 @@ public class OptMove11Generator {
 
     public Set<Move11> getMoves() {
         HashSet<Move11> moves = new HashSet<Move11>();
-        for (Integer sourceNode : getRandomNodeIndexes(genMat.length)) {
+        for (Integer sourceNode : getRandomNodeIndexes(genMat.length / 2)) {
             for (Integer targetNode : extract(sourceNode, genMat.length / 2)) {
                 moves.add(moveGen.Move11(sourceNode, targetNode));
             }
