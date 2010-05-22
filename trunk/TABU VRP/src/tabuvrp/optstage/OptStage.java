@@ -30,7 +30,8 @@ public class OptStage extends Stage {
 
         Set<Move11> moves = generator.getMoves();
         for (Move11 move : moves) {
-            if (move.getDeltaCost() < minDeltaCost) {
+            if (move.getDeltaCost() < minDeltaCost &&
+                move.getDeltaInfIndex() == 0) {
                 /* new move candidate */
                 bestMove = move;
                 minDeltaCost = move.getDeltaCost();
