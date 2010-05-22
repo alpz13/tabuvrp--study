@@ -1,7 +1,7 @@
 package tabuvrp;
 
 import tabuvrp.vrp.*;
-import tabuvrp.gui.TabuVRP;
+import tabuvrp.gui.TabuDemo;
 
 
 public class Main {
@@ -18,6 +18,6 @@ public class Main {
             System.exit(1);
         }
 
-        new TabuVRP(graph).setVisible(true);
+        new TabuDemo(graph).setVisible(true);
     }
 }

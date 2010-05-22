@@ -11,15 +11,13 @@ public class SolutionDisplay extends Canvas {
     private final double minX, maxX, xCorr, mX;
     private final double minY, maxY, yCorr, mY;
 
-//    public SolutionDisplay() {
-//        this.graph = null;
-//        minX = 0;
-//        maxX = 0;
-//        minY = 0;
-//        maxY = 0;
-//        sol = null;
-//    }
-    public SolutionDisplay(Graph graph, Solution solution) {
+    public SolutionDisplay() {
+        this.graph = null;
+        minX = maxX = xCorr = mX = 0;
+        minY = maxY = yCorr = mY = 0;
+        sol = null;
+    }
+    public SolutionDisplay(Graph graph) {
         super();
         this.graph = graph;
         minX = graph.getMinX();
@@ -30,13 +28,13 @@ public class SolutionDisplay extends Canvas {
         maxY = graph.getMaxY();
         yCorr = (maxY - minY) * 0.015;
         mY = minY - yCorr;
-        sol = solution;
+        sol = null;
     }
 
     @Override
     public void paint(Graphics graphics) {
-//        graphics.drawOval(getWidth() / 2 , getHeight() / 2, getWidth() / 2 , getHeight() / 2);
-//        System.out.println(getHeight() + " " + getWidth() + "");
+        if (graph == null) return;
+        
         Graphics2D g =(Graphics2D) graphics;
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
         Dimension d = getSize();
@@ -52,7 +50,10 @@ public class SolutionDisplay extends Canvas {
                          (int) Math.round((n.getX() - mX) * xFact),
                          (int) Math.round((n.getY() - mY) * yFact));
         }
- 
+
+        if (sol == null) {
+            return;
+        }
         Integer[][] solView = sol.getSolView();
         for (Integer[] route : solView) {
             for (int n = 1; n < route.length; ++n) {

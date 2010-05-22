@@ -101,6 +101,35 @@ public class Path {
         return node.getDemand();
     }
 
+    public void replace(Integer sourceNode, Integer targetNode) {
+        cost += deltaCostForReplace(sourceNode, targetNode);
+        demandBalance += deltaDemandBalanceForReplace(sourceNode, targetNode);
+        steps.set(getPositionByNodeIndex(sourceNode), targetNode);
+    }
+
+    public double deltaCostForReplace(Integer sourceNode, Integer targetNode) {
+        if (   steps.contains(targetNode)
+            || !steps.contains(sourceNode)) {
+            throw new IllegalArgumentException("path doesn't contain 'sourceNode' or path already contains 'targetNode'");
+        }
+        int position = getPositionByNodeIndex(sourceNode);
+        Integer start = (position == 0) ? 0 : steps.get(position - 1);
+        Integer end = (position == steps.size() - 1) ? 0 : steps.get(position + 1);
+        return    graph.getEdge(start, targetNode).getCost()
+                + graph.getEdge(targetNode, end).getCost()
+                - graph.getEdge(start, sourceNode).getCost()
+                - graph.getEdge(sourceNode, end).getCost();
+    }
+
+    public int deltaDemandBalanceForReplace(Integer sourceNode, Integer targetNode) {
+        if (   steps.contains(targetNode)
+            || !steps.contains(sourceNode)) {
+            throw new IllegalArgumentException("path doesn't contain 'sourceNode' or path already contains 'targetNode'");
+        }
+        return graph.getNode(targetNode).getDemand()
+                - graph.getNode(sourceNode).getDemand();
+    }
+    
     public double getCost() {
         return cost;
     }

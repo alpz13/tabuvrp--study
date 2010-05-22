@@ -3,17 +3,15 @@ package tabuvrp.core.move;
 import tabuvrp.core.Path;
 
 
-public final class Move10 extends Move {
+public final class Move11 extends Move {
 
     private final Path sourcePath;
     private final Integer sourceNode;
     private final Path targetPath;
     private final Integer targetNode;
-    private final int position;
 
-    public Move10(Path sourcePath, Integer sourceNode,
+    public Move11(Path sourcePath, Integer sourceNode,
                   Path targetPath, Integer targetNode,
-                  int position,
                   double deltaCost,
                   int deltaInfIndex) {
         super(deltaCost, deltaInfIndex);
@@ -21,7 +19,6 @@ public final class Move10 extends Move {
         this.sourceNode = sourceNode;
         this.targetPath = targetPath;
         this.targetNode = targetNode;
-        this.position = position;
     }
 
     public final Path getSourcePath() {
@@ -38,9 +35,5 @@ public final class Move10 extends Move {
 
     public final Integer getTargetNode() {
         return targetNode;
-    }
-    
-    public final int getPosition() {
-        return position;
     }
 }

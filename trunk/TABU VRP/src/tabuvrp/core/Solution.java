@@ -115,6 +115,30 @@ public class Solution {
         return dDemBal;
     }
 
+    public void replace(Integer sourceNode, Integer targetNode) {
+        if (inSamePath(sourceNode, targetNode)) {
+            throw new IllegalArgumentException("'source node' and 'target node' are in the same path");
+        }
+        Path sourcePath = getPathByNodeIndex(sourceNode);
+        Path targetPath = getPathByNodeIndex(targetNode);
+        sourcePath.replace(sourceNode, targetNode);
+        targetPath.replace(targetNode, sourceNode);
+        nodesToPaths.put(sourceNode, targetPath);
+        nodesToPaths.put(targetNode, sourcePath);
+    }
+
+    public double deltaCostForReplace(Integer sourceNode, Integer targetNode) {
+        return getPathByNodeIndex(sourceNode).deltaCostForReplace(sourceNode, targetNode)
+                + getPathByNodeIndex(targetNode).deltaCostForReplace(targetNode, sourceNode);
+    }
+
+    public int deltaInfIndexForReplace(Integer sourceNode, Integer targetNode) {
+        int srcDDB = getPathByNodeIndex(sourceNode).deltaDemandBalanceForReplace(sourceNode, targetNode);
+        int tgtDDB = getPathByNodeIndex(targetNode).deltaDemandBalanceForReplace(targetNode, sourceNode);
+        return    srcDDB <= 0? 0 : srcDDB
+                + tgtDDB <= 0? 0 : tgtDDB;
+    }
+
     public double getCost() {
         double cost = 0;
         for (Path path : paths) {
