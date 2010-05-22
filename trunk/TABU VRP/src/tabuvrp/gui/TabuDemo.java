@@ -42,6 +42,8 @@ public class TabuDemo extends javax.swing.JFrame implements StageListener {
         solutionDisplay1 = new tabuvrp.gui.SolutionDisplay(graph);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Tabu Search VRP Demo");
+        setResizable(false);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.LOWERED), "Tabu stages"));
 
