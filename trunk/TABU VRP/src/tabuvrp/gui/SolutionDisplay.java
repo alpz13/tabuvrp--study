@@ -8,8 +8,8 @@ public class SolutionDisplay extends Canvas {
 
     private Solution sol;
     private Graph graph;
-    private final double minX, maxX;
-    private final double minY, maxY;
+    private final double minX, maxX, xCorr, mX;
+    private final double minY, maxY, yCorr, mY;
 
 //    public SolutionDisplay() {
 //        this.graph = null;
@@ -24,8 +24,12 @@ public class SolutionDisplay extends Canvas {
         this.graph = graph;
         minX = graph.getMinX();
         maxX = graph.getMaxX();
+        xCorr = (maxX - minX) * 0.05;
+        mX = minX - xCorr;
         minY = graph.getMinY();
         maxY = graph.getMaxY();
+        yCorr = (maxY - minY) * 0.05;
+        mY = minY - yCorr;
         sol = solution;
     }
 
@@ -36,17 +40,17 @@ public class SolutionDisplay extends Canvas {
         Graphics2D g =(Graphics2D) graphics;
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
         Dimension d = getSize();
-        double xFact = d.width / (maxX - minX);
-        double yFact = d.height / (maxY - minY);
+        double xFact = d.width  / (maxX - minX + xCorr * 2);
+        double yFact = d.height / (maxY - minY + yCorr * 2);
         g.setColor(Color.DARK_GRAY);
         for (int i = 0; i < graph.getNodeCount(); ++i) {
             Node n = graph.getNode(i);
-            g.fillOval((int) Math.round((n.getX() - minX) * xFact),
-                       (int) Math.round((n.getY() - minY) * yFact),
+            g.fillOval((int) Math.round((n.getX() - mX) * xFact),
+                       (int) Math.round((n.getY() - mY) * yFact),
                        8, 8);
             g.drawString(String.valueOf(i),
-                         (int) Math.round((n.getX() - minX) * xFact),
-                         (int) Math.round((n.getY() - minY) * yFact));
+                         (int) Math.round((n.getX() - mX) * xFact),
+                         (int) Math.round((n.getY() - mY) * yFact));
         }
         g.setColor(Color.green);
         Integer[][] solView = sol.getSolView();
@@ -59,13 +63,13 @@ public class SolutionDisplay extends Canvas {
                 }
                 Node n1 = graph.getNode(route[n - 1]);
                 Node n2 = graph.getNode(route[n]);
-                g.drawLine((int) Math.round((n1.getX() - minX) * xFact),
-                           (int) Math.round((n1.getY() - minY) * yFact),
-                           (int) Math.round((n2.getX() - minX) * xFact),
-                           (int) Math.round((n2.getY() - minY) * yFact));
+                g.drawLine((int) Math.round((n1.getX() - mX) * xFact),
+                           (int) Math.round((n1.getY() - mY) * yFact),
+                           (int) Math.round((n2.getX() - mX) * xFact),
+                           (int) Math.round((n2.getY() - mY) * yFact));
                 g.drawString(String.valueOf(Math.round(graph.getEdge(route[n - 1], route[n]).getCost())),
-                             Math.round(((n2.getX() + n1.getX()) / 2 - minX) * xFact),
-                             Math.round(((n2.getY() + n1.getY()) / 2 - minY) * yFact) );
+                             Math.round(((n2.getX() + n1.getX()) / 2 - mX) * xFact),
+                             Math.round(((n2.getY() + n1.getY()) / 2 - mY) * yFact) );
             }
         }
     }
