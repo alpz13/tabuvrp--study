@@ -24,11 +24,11 @@ public class SolutionDisplay extends Canvas {
         this.graph = graph;
         minX = graph.getMinX();
         maxX = graph.getMaxX();
-        xCorr = (maxX - minX) * 0.05;
+        xCorr = (maxX - minX) * 0.015;
         mX = minX - xCorr;
         minY = graph.getMinY();
         maxY = graph.getMaxY();
-        yCorr = (maxY - minY) * 0.05;
+        yCorr = (maxY - minY) * 0.015;
         mY = minY - yCorr;
         sol = solution;
     }
@@ -42,31 +42,28 @@ public class SolutionDisplay extends Canvas {
         Dimension d = getSize();
         double xFact = d.width  / (maxX - minX + xCorr * 2);
         double yFact = d.height / (maxY - minY + yCorr * 2);
-        g.setColor(Color.DARK_GRAY);
+        g.setColor(Color.BLUE);
         for (int i = 0; i < graph.getNodeCount(); ++i) {
             Node n = graph.getNode(i);
             g.fillOval((int) Math.round((n.getX() - mX) * xFact),
                        (int) Math.round((n.getY() - mY) * yFact),
-                       8, 8);
+                       10, 4);
             g.drawString(String.valueOf(i),
                          (int) Math.round((n.getX() - mX) * xFact),
                          (int) Math.round((n.getY() - mY) * yFact));
         }
-        g.setColor(Color.green);
+ 
         Integer[][] solView = sol.getSolView();
         for (Integer[] route : solView) {
             for (int n = 1; n < route.length; ++n) {
-                if (n % 2 == 0) {
-                    g.setColor(Color.blue);
-                } else {
-                    g.setColor(Color.red);
-                }
                 Node n1 = graph.getNode(route[n - 1]);
                 Node n2 = graph.getNode(route[n]);
+                g.setColor(Color.DARK_GRAY);
                 g.drawLine((int) Math.round((n1.getX() - mX) * xFact),
                            (int) Math.round((n1.getY() - mY) * yFact),
                            (int) Math.round((n2.getX() - mX) * xFact),
                            (int) Math.round((n2.getY() - mY) * yFact));
+                g.setColor(Color.GRAY);
                 g.drawString(String.valueOf(Math.round(graph.getEdge(route[n - 1], route[n]).getCost())),
                              Math.round(((n2.getX() + n1.getX()) / 2 - mX) * xFact),
                              Math.round(((n2.getY() + n1.getY()) / 2 - mY) * yFact) );
