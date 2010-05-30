@@ -21,7 +21,6 @@ public class Move11Generator {
         Path targetPath = solution.getPathByNodeIndex(targetNode);
 
         double deltaCost = solution.deltaCostForReplace(sourceNode, targetNode);
-
         int deltaInfIndex = solution.deltaInfIndexForReplace(sourceNode, targetNode);
 
         Move11 move = new Move11(sourcePath, sourceNode,

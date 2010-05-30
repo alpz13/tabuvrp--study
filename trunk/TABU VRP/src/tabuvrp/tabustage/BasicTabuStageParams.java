@@ -53,7 +53,7 @@ public final class BasicTabuStageParams extends TabuStageParams {
         if (solution.isFeasible() == feasible) {
             noFeasTransStreak += 1;
             if (noFeasTransStreak == BETA) {
-                alpha = feasible? (alpha / 2) : (alpha * 2);
+                alpha = feasible? (alpha / 2) : (alpha  * 2);
                 noFeasTransStreak = 0;
             }
         } else {

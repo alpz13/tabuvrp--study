@@ -47,41 +47,57 @@ public class TabuStage extends Stage {
     }
 
     protected boolean doStep() {
-
         double minF2 = Double.MAX_VALUE;
         Move10 bestMove = null;
         boolean moveFound = false;
 
+        /* find the best move (lowest f2) */
         Set<Move10> moves = generator.getMoves();
         for (Move10 move : moves) {
             double tmpF2 = f2ForMove(move);
-            if (tmpF2 < minF2) {
+            if (tmpF2 <= minF2) {
                 /* new move candidate */
                 bestMove = move;
                 minF2 = tmpF2;
                 moveFound = true;
             }
         }
+
         if (moveFound) {
+            System.out.println("\n CHOSEN:" +
+                        bestMove.getSourceNode() + " to "
+                        +bestMove.getTargetNode() + "@"
+                        +bestMove.getPosition()
+                        + "-> dCost " + bestMove.getDeltaCost()
+                        + " dInfIndex " + bestMove.getDeltaInfIndex()
+                        + " f2 : from " + f2ForSolution(solution) + " to "+ f2ForMove(bestMove) );
+
+            /* apply best move, update tabu index */
             generator.apply(bestMove);
             tabuIndex.setTabu(bestMove.getSourceNode(),
                               bestMove.getTargetPath(),
                               params.getTheta());
+
             if (solution.isFeasible()) {
+                /* new solution is feasible */
                 feasibleSteps += 1;
                 notifyAll_NewUsefulStep(true);
-                if (minF2 < f2ForSolution(bestSolution)) {
-                    /* new best solution */
+
+                if (solution.getCost() < bestSolution.getCost()) {
+                    /* new solution is best solution */
                     setBestSolution(solution);
                 }
             }
+
             else {
+                /* new solution is not feasible */
                 infeasibleSteps += 1;
                 notifyAll_NewUsefulStep(false);
             }
-            tabuIndex.step();
             params.step();
         }
+        
+        tabuIndex.step();
         steps += 1;
         return steps < params.MAX_STEPS;
     }
