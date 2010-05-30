@@ -96,9 +96,8 @@ public class Path {
     }
 
     public int deltaDemandBalanceForRemove(Integer nodeIndex) {
-        int position = getPositionByNodeIndex(nodeIndex);
         Node node = graph.getNode(nodeIndex);
-        return node.getDemand();
+        return - node.getDemand();
     }
 
     public void replace(Integer sourceNode, Integer targetNode) {

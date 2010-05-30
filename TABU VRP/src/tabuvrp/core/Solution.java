@@ -88,12 +88,10 @@ public class Solution {
     }
 
     public int deltaInfIndexForRemove(Integer nodeIndex) {
-        int dDemBal = getPathByNodeIndex(nodeIndex).deltaDemandBalanceForRemove(nodeIndex);
-        if (dDemBal <= 0) {
-            // no penalty
-            return 0;
-        }
-        return dDemBal;
+        Path p = getPathByNodeIndex(nodeIndex);
+        return deltaDBtoDeltaInfIndex(
+                p.getDemandBalance(),
+                p.deltaDemandBalanceForRemove(nodeIndex) );
     }
 
     public void insert(Integer targetNode, int position, Integer nodeIndex) {
@@ -107,12 +105,10 @@ public class Solution {
     }
 
     public int deltaInfIndexForInsert(Integer targetNode, Integer nodeIndex) {
-        int dDemBal = getPathByNodeIndex(targetNode).deltaDemandBalanceForInsert(nodeIndex);
-        if (dDemBal <= 0) {
-            // no penalty
-            return 0;
-        }
-        return dDemBal;
+        Path p = getPathByNodeIndex(targetNode);
+        return deltaDBtoDeltaInfIndex(
+                p.getDemandBalance(),
+                p.deltaDemandBalanceForInsert(nodeIndex) );
     }
 
     public void replace(Integer sourceNode, Integer targetNode) {
@@ -133,10 +129,14 @@ public class Solution {
     }
 
     public int deltaInfIndexForReplace(Integer sourceNode, Integer targetNode) {
-        int srcDDB = getPathByNodeIndex(sourceNode).deltaDemandBalanceForReplace(sourceNode, targetNode);
-        int tgtDDB = getPathByNodeIndex(targetNode).deltaDemandBalanceForReplace(targetNode, sourceNode);
-        return    srcDDB <= 0? 0 : srcDDB
-                + tgtDDB <= 0? 0 : tgtDDB;
+        Path p1 = getPathByNodeIndex(sourceNode);
+        Path p2 = getPathByNodeIndex(targetNode);
+        return deltaDBtoDeltaInfIndex(
+                    p1.getDemandBalance(),
+                    p1.deltaDemandBalanceForReplace(sourceNode, targetNode) )
+               + deltaDBtoDeltaInfIndex( 
+                       p2.getDemandBalance(),
+                       p2.deltaDemandBalanceForReplace(targetNode, sourceNode) );
     }
 
     public double getCost() {
@@ -156,6 +156,35 @@ public class Solution {
             }
         }
         return infIndex;
+    }
+
+    protected int deltaDBtoDeltaInfIndex(int curDB, int dDB) {
+        int dII;
+        if (curDB <= 0) {
+            if (dDB <= 0) {
+                // NEG NEG
+                // no penalty
+                dII = 0;
+            }
+            else {
+                // NEG POS
+                // penalty if dDB is big enough
+                dII = (dDB + curDB > 0)? (dDB + curDB) : 0;
+            }
+        }
+        else {
+            if (dDB >= 0) {
+                // POS POS
+                // full penalty
+                dII = dDB;
+            }
+            else {
+                // POS NEG
+                // full or partial gain
+                dII = (dDB + curDB <= 0)? -curDB : dDB;
+            }
+        }        
+        return dII;
     }
     
     public boolean isFeasible() {
