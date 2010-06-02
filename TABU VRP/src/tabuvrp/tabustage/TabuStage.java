@@ -64,13 +64,13 @@ public class TabuStage extends Stage {
         }
 
         if (moveFound) {
-            System.out.println("\n CHOSEN:" +
-                        bestMove.getSourceNode() + " to "
-                        +bestMove.getTargetNode() + "@"
-                        +bestMove.getPosition()
-                        + "-> dCost " + bestMove.getDeltaCost()
-                        + " dInfIndex " + bestMove.getDeltaInfIndex()
-                        + " f2 : from " + f2ForSolution(solution) + " to "+ f2ForMove(bestMove) );
+//            System.out.println("\n CHOSEN:" +
+//                        bestMove.getSourceNode() + " to "
+//                        +bestMove.getTargetNode() + "@"
+//                        +bestMove.getPosition()
+//                        + "-> dCost " + bestMove.getDeltaCost()
+//                        + " dInfIndex " + bestMove.getDeltaInfIndex()
+//                        + " f2 : from " + f2ForSolution(solution) + " to "+ f2ForMove(bestMove) );
 
             /* apply best move, update tabu index */
             generator.apply(bestMove);

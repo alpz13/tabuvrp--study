@@ -217,10 +217,10 @@ public class TabuDemo extends javax.swing.JFrame implements StageListener {
         }
         /* STAGE 0 */
         s0params = new BasicTabuStageParams(sol,
-                    1000, 10,                                  // alpha, beta
+                    0.5, 9,                                // alpha, beta
                     (int) Math.min(n, 5),                   // p
                     (int) Math.min(n, Math.round(5 * mt)),  // q
-                    5, 10,                                  // min theta, max theta
+                    7, 9,                                   // min theta, max theta
                     10 * n);
 
         s0 = new TabuStage(graph, s0params, sol);
@@ -233,11 +233,11 @@ public class TabuDemo extends javax.swing.JFrame implements StageListener {
         /* STAGE 1 */
         sol = s0.getBestSolution();
         s1params = new BasicTabuStageParams(sol,
-                    1000, 10,
-                    Math.min(n, 10),
+                    2, 5,
+                    n/4,
                     n,
-                    1, 2,
-                    100);
+                    3, 6,
+                    5 * n);
         s1 = new TabuStage(graph, s1params, sol);
         s1.addTabuStageListener(tabuStageDisplay2);
         s1.addStageListener(this);
